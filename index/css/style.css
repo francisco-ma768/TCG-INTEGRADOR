@@ -1,37 +1,33 @@
 body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #2b1d17;
+  background: url("../assets/fondo.jpg") no-repeat center center fixed;
+  background-size: cover;
+  font-family: "Poppins", sans-serif;
   color: #fff;
   text-align: center;
 }
 
-.boton {
-  display: inline-block;
-  margin: 10px;
-  padding: 12px 20px;
-  background-color: #c47428;
-  color: #fff;
-  border-radius: 10px;
-  text-decoration: none;
-  transition: background 0.3s;
-}
-.boton:hover {
-  background-color: #ffb347;
+h1 {
+  font-size: 3em;
+  margin-top: 50px;
 }
 
-.zona-cartas {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 40px;
+.menu button {
+  display: block;
+  margin: 15px auto;
+  padding: 12px 24px;
+  background: #5c3b1e;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background 0.3s;
 }
-.carta {
-  width: 150px;
-  height: 220px;
-  background: #fff;
-  color: #000;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
+
+.menu button:hover {
+  background: #8a613a;
 }
+
+
+
+
