@@ -1,20 +1,146 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verso y Venganza</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verso y Venganza</title>
+    
+    <style>
+        /* [ ... Tu CSS permanece igual para mantener el estilo ... ] */
+        body {
+            /* **FONDO DE JUNGLA/BOSQUE** */
+            background-image: url('assets/jungla.png'); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed;
+            
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif; 
+            
+            display: flex;
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 5%;
+        }
+
+        .decorative-left-side {
+            width: 45%; 
+            height: 90vh; 
+            background-repeat: no-repeat;
+            
+            background-image: 
+                url('assets/cavernicola.png'),
+                url('assets/piedra.png'); 
+            
+            background-position: 
+                left 110%, 
+                left 110%; 
+                
+            background-size: 
+                75% auto, 
+                100% auto; 
+        }
+
+        .menu-tablillas-container {
+            display: flex;
+            flex-direction: column; 
+            gap: 20px; 
+            margin-right: 5%; 
+            width: 300px; 
+            text-align: center;
+        }
+
+        .gray-box {
+            background-color: #646464; 
+            color: white; 
+            padding: 15px; 
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .gray-box h2 {
+            font-size: 1.6em; 
+            margin: 0 0 15px 0; 
+        }
+
+        .gray-box h3 {
+            font-size: 1.1em;
+            margin-top: 15px; 
+            border-top: 1px solid white; 
+            padding-top: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .menu-buttons button {
+            display: block;
+            width: 100%;
+            margin: 10px 0; 
+            padding: 15px; 
+            font-size: 2em; 
+            font-weight: bold;
+            cursor: pointer;
+            
+            background-color: transparent; 
+            border: none;
+            color: white; 
+            text-shadow: 3px 3px 4px rgba(0, 0, 0, 0.9); 
+            transition: color 0.3s;
+        }
+        
+        .menu-buttons button:hover {
+            color: #ffcc00; 
+        }
+
+        .creators-list p {
+            margin: 2px 0;
+            line-height: 1.2;
+            font-size: 1em; 
+        }
+        
+        .fire-icon {
+            margin: 15px auto 0 auto; 
+            width: 15px; 
+            height: 15px; 
+            background-color: orange;
+            border-radius: 50%;
+        }
+    </style> 
 </head>
 <body>
-  <div class="menu">
-    <img src="assets/image.png" alt="Menú principal" class="fondo">
 
+    <div class="decorative-left-side">
+    </div>
 
-    <button class="btn jugar" onclick="window.location.href='tablero.html'">Jugar</button>
-    <button class="btn config" onclick="window.location.href='menu.html'">Configuraciones</button>
-    <button class="btn creditos" onclick="window.location.href='mano.html'">Créditos</button>
-  </div>
+    <div class="menu-tablillas-container">
+        
+        <div class="gray-box navigation-box">
+            <header>
+                <h2>La lucha de tribu</h2>
+            </header>
+            
+            <nav class="menu-buttons">
+                <button onclick="window.location.href='mano.html';">Jugar</button>
+                <button onclick="window.location.href='configuraciones.html';">Configuraciones</button>
+            </nav>
+            <div class="fire-icon"></div>
+        </div>
+
+        <div class="gray-box credits-box-content">
+            <header>
+                <h2>Verso y venganza</h2>
+                <h3>Créditos</h3>
+            </header>
+            
+            <div class="creators-list">
+                <p>Creadores: Fran Martín, Mía Mauro,</p>
+                <p>Octa Oliva y Bauti Armijo.</p>
+            </div>
+        </div>
+
+    </div>
+
 </body>
 </html>
-

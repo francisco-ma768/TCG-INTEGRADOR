@@ -1,33 +1,109 @@
+/* ---------------------------------------------------- */
+/* 1. LAYOUT PRINCIPAL Y FONDO (BODY) */
+/* ---------------------------------------------------- */
 body {
-  background: url("../assets/fondo.jpg") no-repeat center center fixed;
-  background-size: cover;
-  font-family: "Poppins", sans-serif;
-  color: #fff;
-  text-align: center;
+    /* **FONDO DE JUNGLA/BOSQUE** */
+    /* *** RUTA CORREGIDA: sube un nivel (..) y entra a la carpeta assets *** */
+    background-image: url('../assets/jungla.jpeg'); /* AJUSTAR el nombre y extensión si es necesario */
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed;
+    
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    font-family: Arial, sans-serif; 
+    
+    /* LAYOUT: Usa Flexbox para dividir Izquierda/Derecha */
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 0 5%;
 }
 
-h1 {
-  font-size: 3em;
-  margin-top: 50px;
+/* ---------------------------------------------------- */
+/* 2. LADO IZQUIERDO: IMAGEN DECORATIVA (Hombre, Cueva, Fuego) */
+/* ---------------------------------------------------- */
+.decorative-left-side {
+    width: 45%; 
+    height: 90vh; 
+    
+    /* **IMAGEN DECORATIVA LATERAL** */
+    /* Usaremos el archivo de referencia de tu estructura */
+    background-image: url('../assets/pantalla pri.img'); /* RUTA CORREGIDA */
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: bottom left; 
 }
 
-.menu button {
-  display: block;
-  margin: 15px auto;
-  padding: 12px 24px;
-  background: #5c3b1e;
-  border: none;
-  border-radius: 10px;
-  color: white;
-  font-size: 1.2em;
-  cursor: pointer;
-  transition: background 0.3s;
+/* ---------------------------------------------------- */
+/* 3. LADO DERECHO: CONTENEDOR DE TABLILLAS */
+/* ---------------------------------------------------- */
+.menu-tablillas-container {
+    display: flex;
+    flex-direction: column; 
+    gap: 25px; 
+    margin-right: 5%; 
 }
 
-.menu button:hover {
-  background: #8a613a;
+/* 4. ESTILO BASE DE LA TABLILLA DE PIEDRA */
+.stone-tablet {
+    background-color: rgba(180, 180, 180, 0.9); /* Gris semi-transparente (simula piedra) */
+    color: #333;
+    padding: 20px 30px;
+    width: 250px;
+    border: 5px solid #a89f8d; 
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    text-align: center;
 }
 
+/* 5. Estilos de Títulos y Botones */
+.stone-tablet header h2 {
+    font-size: 1.3em;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
 
+.credits-tablet header h3 {
+    font-size: 1.1em;
+    margin-top: 0;
+    border-bottom: 1px solid #666;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
 
+.creators-list p {
+    margin: 3px 0;
+    line-height: 1.2;
+}
 
+.menu-buttons button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #7b583f; 
+    color: #f5e6b9; 
+    border: 3px solid #f5e6b9;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.menu-buttons button:hover {
+    background-color: #a87e5b;
+}
+
+/* Estilo del ícono de fuego (simplemente un círculo por ahora si no tienes la imagen) */
+.fire-icon {
+    margin-top: 10px;
+    width: 20px;
+    height: 20px;
+    background-color: orange;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}

@@ -1,38 +1,197 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mano del jugador</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Mano - Verso y Venganza</title>
+    
+    <style>
+        /* ---------------------------------------------------- */
+        /* ESTILOS PRINCIPALES DE LA MANO (SELECCIÓN) */
+        /* ---------------------------------------------------- */
+        body {
+            /* Usamos la imagen de la jungla como fondo principal */
+            background-image: url('assets/jungla.png'); 
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #f5e6b9;
+        }
+
+        .selection-container {
+            width: 90%;
+            max-width: 1100px;
+            background-color: rgba(0, 0, 0, 0.85); 
+            padding: 40px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+            border: 4px solid #ffcc00; /* Borde dorado/amarillo consistente */
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #e6675e; /* Rojo de acción */
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #a89f8d;
+        }
+        
+        /* ---------------------------------------------------- */
+        /* ZONA DE MAZO Y MANO (Diseño según tu imagen) */
+        /* ---------------------------------------------------- */
+
+        .deck-and-hand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        /* Mazo de Cartas (Esquina superior izquierda) */
+        .deck-area {
+            position: absolute;
+            top: 40px;
+            left: 20px;
+            /* Usaremos slots apilados para simular el mazo de tu imagen */
+        }
+        
+        .deck-stack .card-visual {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: 5px solid #f5e6b9;
+            border-radius: 10px;
+            width: 100px; 
+            height: 140px;
+            background-color: #5d0f19; /* Color marrón oscuro de la carta */
+        }
+
+        .deck-stack .card-visual:nth-child(1) { transform: translate(6px, 6px); }
+        .deck-stack .card-visual:nth-child(2) { transform: translate(3px, 3px); }
+        .deck-stack .card-visual:nth-child(3) { transform: translate(0, 0); }
+
+        /* Área de las 5 Cartas de la Mano (Fila central) */
+        .hand-selection-area {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            margin-top: 100px; /* Separación visual del mazo */
+        }
+
+        /* Diseño de la Carta Individual (Simulando el marco rústico de tu imagen) */
+        .card-slot {
+            width: 180px; 
+            height: 250px;
+            
+            /* **Simulación del marco rústico** */
+            border: 10px solid transparent; 
+            border-image: url('assets/marco_rustico.png') 30 round; /* **NOTA: Reemplaza con tu imagen de marco si tienes una** */
+            
+            background-color: #5d0f19; /* Marrón oscuro */
+            border-radius: 15px;
+            text-align: center;
+            line-height: 250px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            color: #f5e6b9;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .card-slot:hover {
+            transform: scale(1.03); 
+            box-shadow: 0 0 20px #ffcc00; /* Resaltar con sombra dorada */
+        }
+        
+        /* ---------------------------------------------------- */
+        /* BOTONES DE PIE DE PÁGINA */
+        /* ---------------------------------------------------- */
+
+        .button-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding-top: 30px;
+        }
+
+        .start-game-button {
+            padding: 18px 45px;
+            font-size: 1.8em;
+            background-color: #4CAF50; /* Verde para Jugar */
+            color: white;
+            border: 4px solid #ffcc00; 
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
+            transition: background-color 0.2s;
+            margin-left: auto; /* Mueve el botón Jugar a la derecha */
+        }
+
+        .start-game-button:hover {
+            background-color: #45a049;
+        }
+        
+        .back-button {
+            padding: 10px 20px; 
+            background-color: #555; 
+            color: white; 
+            border: 2px solid #888; 
+            border-radius: 5px; 
+            cursor: pointer;
+            margin-right: auto; /* Mantiene el botón Volver a la izquierda */
+        }
+    </style>
 </head>
-<body class="mano">
-  <h2>🃏 Tus cartas 🃏</h2>
-  <div class="cartas">
-    <img src="assets/carta1.png" alt="Carta 1">
-    <img src="assets/carta2.png" alt="Carta 2">
-    <img src="assets/carta3.png" alt="Carta 3">
-  </div>
-  <button onclick="volverTablero()">Volver al tablero</button>
-  <script src="js/main.js"></script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mano del jugador</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<body class="mano">
-  <h2>🃏 Tus cartas 🃏</h2>
-  <div class="cartas">
-    <img src="assets/carta1.png" alt="Carta 1">
-    <img src="assets/carta2.png" alt="Carta 2">
-    <img src="assets/carta3.png" alt="Carta 3">
-  </div>
-  <button onclick="volverTablero()">Volver al tablero</button>
-  <script src="js/main.js"></script>
+<body>
+
+    <div class="selection-container">
+        
+        <div class="deck-area">
+            <div class="deck-stack">
+                <div class="card-visual"></div>
+                <div class="card-visual"></div>
+                <div class="card-visual"></div>
+            </div>
+        </div>
+
+        <h1>Prepara tu Mano para el Combate</h1>
+        <p>Selecciona 5 cartas para formar tu mano inicial antes de empezar la partida.</p>
+        
+        <div class="hand-selection-area">
+            <div class="card-slot">Carta 1</div>
+            <div class="card-slot">Carta 2</div>
+            <div class="card-slot">Carta 3</div>
+            <div class="card-slot">Carta 4</div>
+            <div class="card-slot">Carta 5</div>
+        </div>
+        
+        <div class="button-footer">
+             <button class="back-button" onclick="window.location.href='index.html';">Volver al Menú</button>
+
+            <button class="start-game-button" onclick="window.location.href='tablero.html';">
+                JUGAR ¡Al Tablero! ➡️
+            </button>
+        </div>
+
+    </div>
+
 </body>
 </html>

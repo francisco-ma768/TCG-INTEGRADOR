@@ -1,21 +1,269 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tablero</title>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verso y Venganza - Tablero de Juego</title>
+    
+    <style>
+        /* ---------------------------------------------------- */
+        /* ESTILOS BASE Y LAYOUT GENERAL */
+        /* ---------------------------------------------------- */
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Oculta barras de desplazamiento */
+            font-family: Arial, sans-serif; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #3d3b37; /* Color base si el fondo no carga */
+        }
+        
+        /* Contenedor Principal (Simula el fondo de tu imagen) */
+        .game-board-container {
+            /* Colores de fondo degradado (simulando atardecer/tierra) */
+            background: linear-gradient(to bottom, #d48e00 0%, #a36f00 50%, #7d5200 100%);
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* ---------------------------------------------------- */
+        /* DECORACIÓN RÚSTICA (Simula el marco y pasto de la imagen) */
+        /* ---------------------------------------------------- */
+
+        /* Marco Principal (Simula el borde rústico y pasto) */
+        .rustic-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Permite hacer clic a través de la decoración */
+        }
+
+        /* Pasto/Paja Superior e Inferior */
+        .pasto-top, .pasto-bottom {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 15%; /* Altura simulada */
+            /* Usarías una imagen real de paja aquí. Esto es una simulación CSS: */
+            background-color: transparent;
+            border-image: url('assets/pasto_o_paja_borde.png') 30 round; 
+            z-index: 10;
+        }
+
+        .pasto-top {
+            top: 0;
+            /* Fondo de las esquinas */
+            background-image: url('assets/paja_superior.png');
+            background-size: cover;
+        }
+
+        .pasto-bottom {
+            bottom: 0;
+            /* Fondo de las esquinas */
+            background-image: url('assets/paja_inferior.png');
+            background-size: cover;
+        }
+        
+        /* Círculo Central Suave (Simula el resplandor de tu imagen) */
+        .center-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60%;
+            height: 80%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.15); /* Blanco semi-transparente */
+            border-radius: 50%;
+            box-shadow: 0 0 100px 50px rgba(255, 255, 255, 0.1); /* Efecto de brillo */
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* ---------------------------------------------------- */
+        /* ZONAS DEL TABLERO FUNCIONALES */
+        /* ---------------------------------------------------- */
+        
+        .game-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-rows: 80% 20%; /* Zona de combate y Mano */
+            z-index: 5; 
+            padding: 20px 0;
+            box-sizing: border-box;
+        }
+
+        /* ZONA DE COMBATE (Arriba) */
+        .combat-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        /* ZONA DE LA MANO DEL JUGADOR (Abajo) */
+        .hand-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px; 
+            padding: 0 50px;
+        }
+
+        /* ---------------------------------------------------- */
+        /* ESTILOS DE CARTA (Según el diseño rústico de tu imagen) */
+        /* ---------------------------------------------------- */
+        
+        /* Estilo base de todas las cartas en juego */
+        .card-visual {
+            width: 140px; 
+            height: 200px;
+            
+            /* Simulación del marco rústico de la imagen */
+            border: 5px solid #000;
+            border-image: url('assets/marco_carta_rustico.png') 30 round; 
+            
+            background-color: #5d0f19; /* Marrón oscuro para el interior */
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            line-height: 200px;
+            color: white;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        /* Mazo Apilado (Esquina superior izquierda, como en la imagen) */
+        .deck-stack {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 20; /* Asegura que esté por encima del tablero */
+        }
+        
+        .deck-stack .card-visual {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 90px; 
+            height: 130px;
+            line-height: 130px;
+        }
+
+        .deck-stack .card-visual:nth-child(1) { transform: translate(6px, 6px); }
+        .deck-stack .card-visual:nth-child(2) { transform: translate(3px, 3px); }
+        .deck-stack .card-visual:nth-child(3) { transform: translate(0, 0); }
+        
+        /* ---------------------------------------------------- */
+        /* ESTILOS DE SLOTS DE COMBATE (Placeholder) */
+        /* ---------------------------------------------------- */
+        
+        .combat-slot {
+            width: 180px;
+            height: 250px;
+            border: 3px dashed rgba(255, 255, 255, 0.3); /* Slot del campo */
+            background-color: rgba(0, 0, 0, 0.1);
+            text-align: center;
+            line-height: 250px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: bold;
+        }
+        
+        /* Zona del Oponente (arriba) */
+        .opponent-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 80%;
+            border-bottom: 2px dashed rgba(255, 255, 255, 0.2);
+            padding-bottom: 20px;
+        }
+
+        /* Zona del Jugador (abajo) */
+        .player-field-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 80%;
+            padding-top: 20px;
+        }
+        
+        /* Botón de Finalizar Turno */
+        .end-turn-button {
+            position: absolute;
+            right: 40px;
+            bottom: 40px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background-color: #e6675e; 
+            color: white;
+            border: 3px solid #ffcc00; 
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 30;
+        }
+    </style>
 </head>
-<body class="tablero">
-  <h2>⚔️ Tablero de combate ⚔️</h2>
-  <div class="campo">
-    <img src="assets/tablero.png" alt="Tablero del juego">
-  </div>
-  <button onclick="irAMano()">Ver mi mano</button>
-  <button onclick="volverInicio()">Volver al inicio</button>
-  <script src="js/main.js"></script>
+<body>
+
+    <div class="game-board-container">
+        
+        <div class="rustic-frame">
+            <div class="center-glow"></div>
+            </div>
+
+        <div class="deck-stack">
+            <div class="card-visual">Mazo</div>
+            <div class="card-visual">Mazo</div>
+            <div class="card-visual">Mazo</div>
+        </div>
+        
+        <div class="game-content">
+
+            <div class="combat-area">
+                
+                <div class="opponent-row">
+                    <div class="combat-slot">Oponente Slot 1</div>
+                    <div class="combat-slot">Oponente Slot 2</div>
+                    <div class="combat-slot">Oponente Slot 3</div>
+                    <div class="combat-slot">Oponente Slot 4</div>
+                    <div class="combat-slot">Oponente Slot 5</div>
+                </div>
+
+                <div class="player-field-row">
+                    <div class="combat-slot">Tu Slot 1</div>
+                    <div class="combat-slot">Tu Slot 2</div>
+                    <div class="combat-slot">Tu Slot 3</div>
+                    <div class="combat-slot">Tu Slot 4</div>
+                    <div class="combat-slot">Tu Slot 5</div>
+                </div>
+
+            </div>
+
+            <div class="hand-area">
+                <div class="card-visual">Cavernícola Apuntado</div>
+                <div class="card-visual">Mamut Enojado</div>
+                <div class="card-visual">Chamán</div>
+                <div class="card-visual">Curación</div>
+                <div class="card-visual">Guiso Curador</div>
+            </div>
+            
+        </div>
+        
+        <button class="end-turn-button">Finalizar Turno ➡️</button>
+
+    </div>
 </body>
 </html>
-
-
-
