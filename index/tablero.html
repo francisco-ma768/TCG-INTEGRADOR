@@ -9,70 +9,37 @@
         /* ---------------------------------------------------- */
         /* ESTILOS BASE Y LAYOUT GENERAL */
         /* ---------------------------------------------------- */
-
+        
         body {
             margin: 0;
             padding: 0;
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Oculta barras de desplazamiento */
+            overflow: hidden; 
             font-family: Arial, sans-serif; 
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #3d3b37; /* Color base si el fondo no carga */
+            background-color: #3d3b37; 
         }
         
-        /* Contenedor Principal (Simula el fondo de tu imagen) */
         .game-board-container {
-            /* Colores de fondo degradado (simulando atardecer/tierra) */
+            /* Fondo que estás usando actualmente */
             background: linear-gradient(to bottom, #d48e00 0%, #a36f00 50%, #7d5200 100%);
             width: 100%;
             height: 100%;
             position: relative;
         }
 
-        /* ---------------------------------------------------- */
-        /* DECORACIÓN RÚSTICA (Simula el marco y pasto de la imagen) */
-        /* ---------------------------------------------------- */
-
-        /* Marco Principal (Simula el borde rústico y pasto) */
         .rustic-frame {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Permite hacer clic a través de la decoración */
+            pointer-events: none;
         }
 
-        /* Pasto/Paja Superior e Inferior */
-        .pasto-top, .pasto-bottom {
-            position: absolute;
-            left: 0;
-            width: 100%;
-            height: 15%; /* Altura simulada */
-            /* Usarías una imagen real de paja aquí. Esto es una simulación CSS: */
-            background-color: transparent;
-            border-image: url('assets/pasto_o_paja_borde.png') 30 round; 
-            z-index: 10;
-        }
-
-        .pasto-top {
-            top: 0;
-            /* Fondo de las esquinas */
-            background-image: url('assets/paja_superior.png');
-            background-size: cover;
-        }
-
-        .pasto-bottom {
-            bottom: 0;
-            /* Fondo de las esquinas */
-            background-image: url('assets/paja_inferior.png');
-            background-size: cover;
-        }
-        
-        /* Círculo Central Suave (Simula el resplandor de tu imagen) */
         .center-glow {
             position: absolute;
             top: 50%;
@@ -80,16 +47,12 @@
             width: 60%;
             height: 80%;
             transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.15); /* Blanco semi-transparente */
+            background-color: rgba(255, 255, 255, 0.15);
             border-radius: 50%;
-            box-shadow: 0 0 100px 50px rgba(255, 255, 255, 0.1); /* Efecto de brillo */
+            box-shadow: 0 0 100px 50px rgba(255, 255, 255, 0.1);
             pointer-events: none;
             z-index: 1;
         }
-        
-        /* ---------------------------------------------------- */
-        /* ZONAS DEL TABLERO FUNCIONALES */
-        /* ---------------------------------------------------- */
         
         .game-content {
             position: absolute;
@@ -98,13 +61,12 @@
             width: 100%;
             height: 100%;
             display: grid;
-            grid-template-rows: 80% 20%; /* Zona de combate y Mano */
+            grid-template-rows: 80% 20%; 
             z-index: 5; 
             padding: 20px 0;
             box-sizing: border-box;
         }
 
-        /* ZONA DE COMBATE (Arriba) */
         .combat-area {
             display: flex;
             flex-direction: column;
@@ -121,35 +83,12 @@
             padding: 0 50px;
         }
 
-        /* ---------------------------------------------------- */
-        /* ESTILOS DE CARTA (Según el diseño rústico de tu imagen) */
-        /* ---------------------------------------------------- */
-        
-        /* Estilo base de todas las cartas en juego */
-        .card-visual {
-            width: 140px; 
-            height: 200px;
-            
-            /* Simulación del marco rústico de la imagen */
-            border: 5px solid #000;
-            border-image: url('assets/marco_carta_rustico.png') 30 round; 
-            
-            background-color: #5d0f19; /* Marrón oscuro para el interior */
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
-            text-align: center;
-            line-height: 200px;
-            color: white;
-            font-size: 0.9em;
-            font-weight: bold;
-        }
-
-        /* Mazo Apilado (Esquina superior izquierda, como en la imagen) */
+        /* Mazo Apilado */
         .deck-stack {
             position: absolute;
             top: 20px;
             left: 20px;
-            z-index: 20; /* Asegura que esté por encima del tablero */
+            z-index: 20; 
         }
         
         .deck-stack .card-visual {
@@ -160,46 +99,40 @@
             height: 130px;
             line-height: 130px;
         }
-
         .deck-stack .card-visual:nth-child(1) { transform: translate(6px, 6px); }
         .deck-stack .card-visual:nth-child(2) { transform: translate(3px, 3px); }
         .deck-stack .card-visual:nth-child(3) { transform: translate(0, 0); }
         
-        /* ---------------------------------------------------- */
-        /* ESTILOS DE SLOTS DE COMBATE (Placeholder) */
-        /* ---------------------------------------------------- */
-        
         .combat-slot {
             width: 180px;
             height: 250px;
-            border: 3px dashed rgba(255, 255, 255, 0.3); /* Slot del campo */
+            border: 3px dashed rgba(255, 255, 255, 0.3);
             background-color: rgba(0, 0, 0, 0.1);
             text-align: center;
             line-height: 250px;
             color: rgba(255, 255, 255, 0.5);
             font-weight: bold;
+            display: flex; /* Añadido para centrar la carta dentro del slot */
+            justify-content: center;
+            align-items: center;
         }
         
-        /* Zona del Oponente (arriba) */
-        .opponent-row {
+        .opponent-row, .player-field-row {
             display: flex;
             justify-content: center;
             gap: 20px;
             width: 80%;
+        }
+        
+        .opponent-row {
             border-bottom: 2px dashed rgba(255, 255, 255, 0.2);
             padding-bottom: 20px;
         }
-
-        /* Zona del Jugador (abajo) */
+        
         .player-field-row {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            width: 80%;
             padding-top: 20px;
         }
         
-        /* Botón de Finalizar Turno */
         .end-turn-button {
             position: absolute;
             right: 40px;
@@ -214,6 +147,124 @@
             font-weight: bold;
             z-index: 30;
         }
+
+        /* ---------------------------------------------------- */
+        /* ESTILOS DE CARTA Y RECURSOS */
+        /* ---------------------------------------------------- */
+        
+        .player-info {
+            /* Contenedor de Maná */
+            display: flex;
+            flex-direction: column; 
+            align-items: center;
+            padding: 8px 15px;
+        }
+
+        .mana-points {
+            display: block;
+            margin-top: 5px;
+            color: #ffcc00; 
+            font-size: 1.2em;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 3px 8px;
+            border-radius: 3px;
+            border: 1px solid #ffcc00;
+        }
+
+        .card-visual {
+            width: 140px; 
+            height: 200px;
+            border: 5px solid transparent; 
+            border-image: url('assets/marco_carta_rustico.png') 30 round; 
+            background-color: #5d0f19; 
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            box-sizing: border-box;
+            color: white;
+            position: relative;
+            line-height: normal;
+            transition: transform 0.2s; 
+        }
+        
+        .hand-area .card-visual:hover {
+            transform: scale(1.05) translateY(-5px);
+            z-index: 100;
+        }
+
+        .card-name {
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 2px;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        .card-image-placeholder {
+            width: 90%;
+            height: 100px;
+            background-color: #999; 
+            border-radius: 5px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8em;
+        }
+
+        .card-cost {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background-color: #ffcc00; 
+            color: #000;
+            border-radius: 50%;
+            font-weight: bolder;
+            border: 2px solid #5d0f19;
+            z-index: 10;
+        }
+        
+        .card-stats {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 3px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid white;
+        }
+        
+        .stat-atk {
+            color: #e6675e; 
+        }
+        
+        .stat-def {
+            color: #4CAF50;
+        }
+        
+        .card-visual.habilidad .stat-value {
+            color: #00bcd4; 
+        }
+        
+        .card-visual.habilidad .card-stats > .stat-atk,
+        .card-visual.habilidad .card-stats > .stat-def {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -222,7 +273,7 @@
         
         <div class="rustic-frame">
             <div class="center-glow"></div>
-            </div>
+        </div>
 
         <div class="deck-stack">
             <div class="card-visual">Mazo</div>
@@ -243,27 +294,323 @@
                 </div>
 
                 <div class="player-field-row">
-                    <div class="combat-slot">Tu Slot 1</div>
-                    <div class="combat-slot">Tu Slot 2</div>
-                    <div class="combat-slot">Tu Slot 3</div>
-                    <div class="combat-slot">Tu Slot 4</div>
-                    <div class="combat-slot">Tu Slot 5</div>
+                    <div class="combat-slot drop-zone" data-slot-id="p1-slot-1">Tu Slot 1</div>
+                    <div class="combat-slot drop-zone" data-slot-id="p1-slot-2">Tu Slot 2</div>
+                    <div class="combat-slot drop-zone" data-slot-id="p1-slot-3">Tu Slot 3</div>
+                    <div class="combat-slot drop-zone" data-slot-id="p1-slot-4">Tu Slot 4</div>
+                    <div class="combat-slot drop-zone" data-slot-id="p1-slot-5">Tu Slot 5</div>
                 </div>
 
             </div>
 
-            <div class="hand-area">
-                <div class="card-visual">Cavernícola Apuntado</div>
-                <div class="card-visual">Mamut Enojado</div>
-                <div class="card-visual">Chamán</div>
-                <div class="card-visual">Curación</div>
-                <div class="card-visual">Guiso Curador</div>
-            </div>
+            <div id="player-hand" class="hand-area">
+                </div>
             
         </div>
         
-        <button class="end-turn-button">Finalizar Turno ➡️</button>
+        <div style="position: absolute; top: 10px; right: 20px; z-index: 40;">
+            <div class="player-info player-2-side">
+                <span class="player-name" style="color: white; font-weight: bold;">Tribu Orah (Tú)</span>
+                <span id="player-mana" class="mana-points">✨ 0 / 5</span> 
+            </div>
+        </div>
+        
+        <div style="position: absolute; top: 10px; left: 160px; z-index: 40;">
+            <div class="player-info player-1-side">
+                <span class="player-name" style="color: white; font-weight: bold;">Tribu Enemiga</span>
+                </div>
+        </div>
+
+        <button class="end-turn-button" onclick="endTurn()">Finalizar Turno ➡️</button>
 
     </div>
+
+    <script>
+        // **----------------------------------------------------**
+        // ** VARIABLES GLOBALES DE JUEGO **
+        // **----------------------------------------------------**
+
+        let currentMana = 0; 
+        let maxMana = 5;
+        let draggedCard = null; 
+
+        // Variables para el Mazo y el control de turnos
+        let deck = []; // Mazo completo del jugador
+        let isPlayerTurn = true; // Controla quién está jugando
+
+        // **----------------------------------------------------**
+        // ** GESTIÓN DE RECURSOS (MANÁ) **
+        // **----------------------------------------------------**
+
+        function updateManaDisplay() {
+            const manaDisplay = document.getElementById('player-mana');
+            if (manaDisplay) {
+                manaDisplay.textContent = `✨ ${currentMana} / ${maxMana}`;
+            }
+        }
+
+        function startTurn() {
+            currentMana = maxMana;
+            updateManaDisplay();
+            console.log(`Turno iniciado. Recursos: ${currentMana}/${maxMana}`);
+        }
+
+        function payCardCost(cost) {
+            if (currentMana >= cost) {
+                currentMana -= cost;
+                updateManaDisplay();
+                return true; 
+            } else {
+                console.warn(`¡ALERTA! Maná insuficiente. Requerido: ${cost}, Disponible: ${currentMana}`);
+                return false; 
+            }
+        }
+
+        // **----------------------------------------------------**
+        // ** LÓGICA DE DRAG AND DROP (ARRRASTRAR Y SOLTAR) **
+        // **----------------------------------------------------**
+
+        function handleDragStart(e) {
+            draggedCard = this;
+            const cost = this.getAttribute('data-cost');
+            e.dataTransfer.setData('text/plain', cost);
+            setTimeout(() => (this.style.visibility = 'hidden'), 0); 
+        }
+
+        function handleDragEnd(e) {
+            this.style.visibility = 'visible';
+            draggedCard = null;
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault(); 
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            
+            const dropZone = this;
+
+            if (dropZone.querySelector('.card-visual')) {
+                console.log("Slot ya ocupado. No se puede jugar aquí.");
+                return;
+            }
+
+            const cost = parseInt(e.dataTransfer.getData('text/plain'));
+            
+            if (payCardCost(cost)) {
+                draggedCard.style.visibility = 'visible'; 
+                draggedCard.parentNode.removeChild(draggedCard);
+                dropZone.appendChild(draggedCard);
+                
+                // Deshabilitamos el drag para la carta que ya está en juego
+                draggedCard.setAttribute('draggable', 'false');
+                draggedCard.removeEventListener('dragstart', handleDragStart);
+                draggedCard.removeEventListener('dragend', handleDragEnd);
+
+                console.log(`¡Carta jugada con éxito! Costo: ${cost}. Maná restante: ${currentMana}`);
+            } else {
+                console.log("No se pudo jugar la carta, costo insuficiente.");
+            }
+        }
+
+        function addDragDropListeners() {
+            const cards = document.querySelectorAll('#player-hand .card-visual');
+            cards.forEach(card => {
+                if (card.getAttribute('draggable') === 'true') {
+                    card.addEventListener('dragstart', handleDragStart);
+                    card.addEventListener('dragend', handleDragEnd);
+                }
+            });
+
+            const dropZones = document.querySelectorAll('.drop-zone');
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('drop', handleDrop);
+            });
+            console.log("Eventos de Drag and Drop inicializados.");
+        }
+
+        // **----------------------------------------------------**
+        // ** LÓGICA DE COMBATE Y CONTROL DE TURNOS **
+        // **----------------------------------------------------**
+
+        function getCardStats(slotElement) {
+            const cardVisual = slotElement.querySelector('.card-visual');
+            if (!cardVisual) return null;
+
+            const attackSpan = cardVisual.querySelector('.stat-atk');
+            const attackValue = attackSpan ? parseInt(attackSpan.textContent.replace('⚔️', '').trim()) : 0;
+            
+            return { 
+                ataque: attackValue,
+                // Si tiene ataque, es un luchador (para el combate)
+                tipo: attackValue > 0 ? 'Luchador' : 'Habilidad' 
+            };
+        }
+
+        function processCombatPhase() {
+            console.log("----------------------");
+            console.log("INICIO DE FASE DE COMBATE");
+            
+            const playerSlots = document.querySelectorAll('.player-field-row .drop-zone');
+            
+            playerSlots.forEach((playerSlot, index) => {
+                const playerCardStats = getCardStats(playerSlot);
+                
+                if (playerCardStats && playerCardStats.tipo === 'Luchador') {
+                    const damage = playerCardStats.ataque;
+                    
+                    if (damage > 0) {
+                        console.log(`Carta del jugador en Slot ${index + 1} ataca con ${damage}.`);
+                        opponentLosesCards(damage); 
+                    }
+                }
+            });
+            
+            console.log("FIN DE FASE DE COMBATE");
+            console.log("----------------------");
+        }
+
+        function opponentLosesCards(count) {
+            console.log(`El Oponente ha perdido la cuenta de ${count} cartas (Simulación de daño al mazo/mano).`);
+            // Aquí se verificaría la condición de victoria/derrota del oponente.
+        }
+
+        function drawCard() {
+            const handContainer = document.getElementById('player-hand');
+            
+            if (handContainer.children.length >= 5) {
+                console.warn("Mano llena (5 cartas). No se puede robar.");
+                return;
+            }
+            
+            if (deck.length > 0) {
+                const cardData = deck.shift();
+                const cardElement = createCardElement(cardData);
+                handContainer.appendChild(cardElement);
+                
+                cardElement.addEventListener('dragstart', handleDragStart);
+                cardElement.addEventListener('dragend', handleDragEnd);
+                
+                console.log(`Carta robada: ${cardData.nombre}. Cartas restantes en el mazo: ${deck.length}`);
+                
+            } else {
+                console.error("¡El mazo está vacío! Deberías perder la partida.");
+                alert("¡Derrota! Tu mazo se ha agotado. Fin del Juego.");
+                document.querySelector('.end-turn-button').disabled = true;
+            }
+        }
+
+        function endTurn() {
+            console.log("======================================");
+            console.log("FIN DEL TURNO DEL JUGADOR");
+            
+            processCombatPhase();
+            
+            isPlayerTurn = false;
+            document.querySelector('.end-turn-button').disabled = true;
+
+            setTimeout(() => {
+                console.log("... Simulación de Turno del Oponente...");
+                startPlayerTurn();
+            }, 2000); 
+        }
+
+        function startPlayerTurn() {
+            console.log("======================================");
+            console.log("INICIO DEL TURNO DEL JUGADOR");
+            isPlayerTurn = true;
+            document.querySelector('.end-turn-button').disabled = false;
+            
+            drawCard(); 
+            
+            maxMana = Math.min(maxMana + 1, 10); 
+            startTurn();
+            
+            addDragDropListeners(); 
+            
+            console.log(`¡Tu turno! Maná máximo ahora es: ${maxMana}`);
+        }
+
+        // **----------------------------------------------------**
+        // ** CARGA Y DIBUJO DE CARTAS **
+        // **----------------------------------------------------**
+
+        async function loadCardData() {
+            try {
+                const response = await fetch('data/cartas.json'); 
+                if (!response.ok) {
+                    console.error(`Error de red al cargar JSON: HTTP error! status: ${response.status}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error("No se pudieron cargar los datos de las cartas (Verifique data/cartas.json):", error);
+                return []; 
+            }
+        }
+
+        function createCardElement(card) {
+            const cardElement = document.createElement('div');
+            
+            let typeClass = (card.tipo === 'Habilidad' || card.tipo === 'Curación') ? ' habilidad' : '';
+            cardElement.className = 'card-visual' + typeClass;
+            
+            cardElement.setAttribute('draggable', 'true'); 
+            cardElement.setAttribute('data-cost', card.costo);
+            cardElement.setAttribute('data-id', card.id);
+            
+            // Contenido HTML de la carta
+            cardElement.innerHTML = `
+                <div class="card-cost">${card.costo}</div>
+                <div class="card-name">${card.nombre}</div>
+                <div class="card-image-placeholder">
+                    ${card.tipo}
+                </div>
+                <div class="card-stats">
+                    ${card.tipo === 'Luchador' ? 
+                        // Defensa fija en 10
+                        `<span class="stat-value stat-atk">⚔️ ${card.ataque}</span>
+                         <span class="stat-value stat-def">🛡️ 10</span>` 
+                        : `<span class="stat-value stat-habilidad">${card.efecto} ${card.valor}</span>`
+                    }
+                </div>
+            `;
+            return cardElement;
+        }
+
+        async function initializeDeckAndHand() {
+            const allCards = await loadCardData();
+            
+            deck = allCards.sort(() => Math.random() - 0.5); 
+            
+            const handContainer = document.getElementById('player-hand');
+            
+            for (let i = 0; i < 5; i++) {
+                if (deck.length > 0) {
+                    const cardData = deck.shift(); 
+                    const cardElement = createCardElement(cardData);
+                    handContainer.appendChild(cardElement);
+                }
+            }
+            
+            console.log(`Mazo inicializado. Cartas en el mazo: ${deck.length}`);
+            return Promise.resolve();
+        }
+
+        // **----------------------------------------------------**
+        // ** INICIALIZACIÓN PRINCIPAL **
+        // **----------------------------------------------------**
+
+        window.onload = function() {
+            
+            startTurn();
+            
+            initializeDeckAndHand().then(() => {
+                addDragDropListeners(); 
+            });
+        };
+    </script>
 </body>
 </html>
