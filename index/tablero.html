@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verso y Venganza - Tablero de Juego</title>
+    <title>Verso y Venganza - Tablero de Juego (Combate Solo de Cartas)</title>
     
     <style>
         /* ---------------------------------------------------- */
@@ -24,7 +24,7 @@
         }
         
         .game-board-container {
-            /* Fondo que estás usando actualmente */
+            /* Fondo rústico */
             background: linear-gradient(to bottom, #d48e00 0%, #a36f00 50%, #7d5200 100%);
             width: 100%;
             height: 100%;
@@ -98,6 +98,10 @@
             width: 90px; 
             height: 130px;
             line-height: 130px;
+            background-color: #000;
+            border: 3px solid white;
+            color: white;
+            text-align: center;
         }
         .deck-stack .card-visual:nth-child(1) { transform: translate(6px, 6px); }
         .deck-stack .card-visual:nth-child(2) { transform: translate(3px, 3px); }
@@ -112,7 +116,7 @@
             line-height: 250px;
             color: rgba(255, 255, 255, 0.5);
             font-weight: bold;
-            display: flex; /* Añadido para centrar la carta dentro del slot */
+            display: flex; 
             justify-content: center;
             align-items: center;
         }
@@ -153,13 +157,13 @@
         /* ---------------------------------------------------- */
         
         .player-info {
-            /* Contenedor de Maná */
             display: flex;
             flex-direction: column; 
             align-items: center;
             padding: 8px 15px;
         }
 
+        /* ESTILO DE MANÁ */
         .mana-points {
             display: block;
             margin-top: 5px;
@@ -171,6 +175,7 @@
             border: 1px solid #ffcc00;
         }
 
+        /* Estilos de carta */
         .card-visual {
             width: 140px; 
             height: 200px;
@@ -265,6 +270,41 @@
         .card-visual.habilidad .card-stats > .stat-def {
             display: none;
         }
+
+        /* ---------------------------------------------------- */
+        /* ESTILOS AÑADIDOS PARA COMBATE Y ANIMACIONES */
+        /* ---------------------------------------------------- */
+
+        /* Animación de "Flotar" para cartas en la mano */
+        #player-hand .card-visual {
+            transition: transform 0.3s, box-shadow 0.3s; 
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Efecto de "Muerte" de Carta */
+        .card-visual.destroyed {
+            transition: all 0.5s ease-out;
+            opacity: 0;
+            transform: scale(0.5) rotate(15deg) translateY(50px);
+        }
+
+        /* Estilo para cartas del oponente */
+        .card-visual.opponent-card {
+            background-color: #3a1e1e; 
+            border-color: #ff0000;
+            border-image: none;
+            border-radius: 10px;
+            border: 5px solid #ff0000;
+        }
+        .card-visual.opponent-card .card-image-placeholder {
+             background-color: #5d0f19;
+        }
     </style>
 </head>
 <body>
@@ -276,9 +316,9 @@
         </div>
 
         <div class="deck-stack">
-            <div class="card-visual">Mazo</div>
-            <div class="card-visual">Mazo</div>
-            <div class="card-visual">Mazo</div>
+            <div class="card-visual"></div>
+            <div class="card-visual"></div>
+            <div class="card-visual"></div>
         </div>
         
         <div class="game-content">
@@ -286,25 +326,25 @@
             <div class="combat-area">
                 
                 <div class="opponent-row">
-                    <div class="combat-slot">Oponente Slot 1</div>
-                    <div class="combat-slot">Oponente Slot 2</div>
-                    <div class="combat-slot">Oponente Slot 3</div>
-                    <div class="combat-slot">Oponente Slot 4</div>
-                    <div class="combat-slot">Oponente Slot 5</div>
+                    <div class="combat-slot drop-zone opponent-drop-zone" data-slot-id="o-slot-1">Oponente Slot 1</div>
+                    <div class="combat-slot drop-zone opponent-drop-zone" data-slot-id="o-slot-2">Oponente Slot 2</div>
+                    <div class="combat-slot drop-zone opponent-drop-zone" data-slot-id="o-slot-3">Oponente Slot 3</div>
+                    <div class="combat-slot drop-zone opponent-drop-zone" data-slot-id="o-slot-4">Oponente Slot 4</div>
+                    <div class="combat-slot drop-zone opponent-drop-zone" data-slot-id="o-slot-5">Oponente Slot 5</div>
                 </div>
 
                 <div class="player-field-row">
-                    <div class="combat-slot drop-zone" data-slot-id="p1-slot-1">Tu Slot 1</div>
-                    <div class="combat-slot drop-zone" data-slot-id="p1-slot-2">Tu Slot 2</div>
-                    <div class="combat-slot drop-zone" data-slot-id="p1-slot-3">Tu Slot 3</div>
-                    <div class="combat-slot drop-zone" data-slot-id="p1-slot-4">Tu Slot 4</div>
-                    <div class="combat-slot drop-zone" data-slot-id="p1-slot-5">Tu Slot 5</div>
+                    <div class="combat-slot drop-zone" data-slot-id="p-slot-1">Tu Slot 1</div>
+                    <div class="combat-slot drop-zone" data-slot-id="p-slot-2">Tu Slot 2</div>
+                    <div class="combat-slot drop-zone" data-slot-id="p-slot-3">Tu Slot 3</div>
+                    <div class="combat-slot drop-zone" data-slot-id="p-slot-4">Tu Slot 4</div>
+                    <div class="combat-slot drop-zone" data-slot-id="p-slot-5">Tu Slot 5</div>
                 </div>
 
             </div>
 
             <div id="player-hand" class="hand-area">
-                </div>
+            </div>
             
         </div>
         
@@ -326,21 +366,22 @@
     </div>
 
     <script>
-        // **----------------------------------------------------**
-        // ** VARIABLES GLOBALES DE JUEGO **
-        // **----------------------------------------------------**
+        // **====================================================**
+        // ** VARIABLES GLOBALES DE JUEGO (PV ELIMINADOS) **
+        // **====================================================**
 
         let currentMana = 0; 
         let maxMana = 5;
         let draggedCard = null; 
-
-        // Variables para el Mazo y el control de turnos
         let deck = []; // Mazo completo del jugador
-        let isPlayerTurn = true; // Controla quién está jugando
+        let isPlayerTurn = true; 
 
-        // **----------------------------------------------------**
-        // ** GESTIÓN DE RECURSOS (MANÁ) **
-        // **----------------------------------------------------**
+        // Los contadores de vida del jugador/oponente han sido eliminados del gameplay.
+        // La victoria/derrota ahora se basa SOLO en el agotamiento del mazo/mano.
+        
+        // **====================================================**
+        // ** GESTIÓN DE RECURSOS (MANÁ) Y TURNOS **
+        // **====================================================**
 
         function updateManaDisplay() {
             const manaDisplay = document.getElementById('player-mana');
@@ -366,14 +407,23 @@
             }
         }
 
-        // **----------------------------------------------------**
+        // **====================================================**
         // ** LÓGICA DE DRAG AND DROP (ARRRASTRAR Y SOLTAR) **
-        // **----------------------------------------------------**
+        // **====================================================**
 
         function handleDragStart(e) {
             draggedCard = this;
+            
             const cost = this.getAttribute('data-cost');
-            e.dataTransfer.setData('text/plain', cost);
+            const type = this.getAttribute('data-type'); 
+            const value = this.getAttribute('data-value'); 
+            const effect = this.getAttribute('data-effect');
+
+            e.dataTransfer.setData('text/cost', cost);
+            e.dataTransfer.setData('text/type', type); 
+            e.dataTransfer.setData('text/value', value); 
+            e.dataTransfer.setData('text/effect', effect);
+
             setTimeout(() => (this.style.visibility = 'hidden'), 0); 
         }
 
@@ -390,27 +440,48 @@
             e.preventDefault();
             
             const dropZone = this;
+            const isPlayerField = dropZone.closest('.player-field-row') !== null; 
 
-            if (dropZone.querySelector('.card-visual')) {
-                console.log("Slot ya ocupado. No se puede jugar aquí.");
-                return;
-            }
-
-            const cost = parseInt(e.dataTransfer.getData('text/plain'));
+            const cost = parseInt(e.dataTransfer.getData('text/cost'));
+            const type = e.dataTransfer.getData('text/type');
             
-            if (payCardCost(cost)) {
+            if (!payCardCost(cost)) {
+                return; 
+            }
+            
+            if (type === 'Luchador') {
+                if (!isPlayerField || dropZone.querySelector('.card-visual')) {
+                    console.log("Slot ya ocupado o zona inválida. No se puede jugar aquí.");
+                    currentMana += cost; 
+                    updateManaDisplay();
+                    return;
+                }
+
                 draggedCard.style.visibility = 'visible'; 
                 draggedCard.parentNode.removeChild(draggedCard);
                 dropZone.appendChild(draggedCard);
                 
-                // Deshabilitamos el drag para la carta que ya está en juego
                 draggedCard.setAttribute('draggable', 'false');
                 draggedCard.removeEventListener('dragstart', handleDragStart);
                 draggedCard.removeEventListener('dragend', handleDragEnd);
 
-                console.log(`¡Carta jugada con éxito! Costo: ${cost}. Maná restante: ${currentMana}`);
-            } else {
-                console.log("No se pudo jugar la carta, costo insuficiente.");
+                console.log(`¡Luchador jugado con éxito! Costo: ${cost}. Maná restante: ${currentMana}`);
+                
+            } else if (type === 'Habilidad' || type === 'Curación') {
+                
+                if (isPlayerField) { 
+                    const value = parseInt(e.dataTransfer.getData('text/value'));
+                    const effect = e.dataTransfer.getData('text/effect');
+                    applyAbility(effect, value); 
+                    
+                    draggedCard.parentNode.removeChild(draggedCard);
+                    console.log(`¡Habilidad jugada! Efecto: ${effect}. Carta desechada.`);
+                } else {
+                    console.warn("Las habilidades solo se pueden jugar en el campo del jugador.");
+                    currentMana += cost;
+                    updateManaDisplay();
+                    return;
+                }
             }
         }
 
@@ -423,7 +494,7 @@
                 }
             });
 
-            const dropZones = document.querySelectorAll('.drop-zone');
+            const dropZones = document.querySelectorAll('.player-field-row .drop-zone');
             dropZones.forEach(zone => {
                 zone.addEventListener('dragover', handleDragOver);
                 zone.addEventListener('drop', handleDrop);
@@ -431,9 +502,54 @@
             console.log("Eventos de Drag and Drop inicializados.");
         }
 
-        // **----------------------------------------------------**
-        // ** LÓGICA DE COMBATE Y CONTROL DE TURNOS **
-        // **----------------------------------------------------**
+        // **====================================================**
+        // ** LÓGICA DE HABILIDADES **
+        // **====================================================**
+
+        function applyAbility(effect, value) {
+            if (effect === 'Maná') {
+                currentMana = Math.min(currentMana + value, 10); 
+                updateManaDisplay();
+            } else if (effect === 'Robo') {
+                for (let i = 0; i < value; i++) {
+                    drawCard();
+                }
+            } else if (effect === 'Curación') {
+                 console.log(`¡Curación no implementada! Curar ${value}`);
+            } 
+        }
+
+        // **====================================================**
+        // ** GESTIÓN DE PUNTOS DE VIDA (PV) Y VICTORIA/DERROTA **
+        // ** (PV de Jugadores ELIMINADOS) **
+        // **====================================================**
+
+        function checkGameEnd() {
+            // ** Condición de Derrota/Victoria basada en el Mazo/Mano **
+            if (deck.length === 0 && document.getElementById('player-hand').children.length === 0) {
+                alert("¡DERROTA! Te quedaste sin cartas para robar y sin mano. (Simulación de Derrota)");
+                disableGameControls();
+                return true;
+            }
+            
+            // Nota: Se necesitaría una lógica más robusta para determinar la victoria del oponente 
+            // (ej. el oponente tiene su campo lleno y el jugador no puede robar/jugar).
+
+            return false;
+        }
+
+        function disableGameControls() {
+            const endTurnButton = document.querySelector('.end-turn-button');
+            if (endTurnButton) endTurnButton.disabled = true;
+            document.querySelectorAll('#player-hand .card-visual').forEach(card => card.setAttribute('draggable', 'false'));
+        }
+
+        // ** Las funciones playerLosesHealth y opponentLosesHealth ya no son necesarias **
+        // ** en el juego, solo para efectos de habilidad si los hubiere **
+        
+        // **====================================================**
+        // ** LÓGICA DE COMBATE DIRECTO Y DAÑO A LUCHADORES **
+        // **====================================================**
 
         function getCardStats(slotElement) {
             const cardVisual = slotElement.querySelector('.card-visual');
@@ -442,40 +558,175 @@
             const attackSpan = cardVisual.querySelector('.stat-atk');
             const attackValue = attackSpan ? parseInt(attackSpan.textContent.replace('⚔️', '').trim()) : 0;
             
+            const cardType = cardVisual.getAttribute('data-type') || (attackValue > 0 ? 'Luchador' : 'Habilidad');
+            
             return { 
                 ataque: attackValue,
-                // Si tiene ataque, es un luchador (para el combate)
-                tipo: attackValue > 0 ? 'Luchador' : 'Habilidad' 
+                tipo: cardType 
             };
         }
 
+        function updateCardDefense(cardElement, damage) {
+            let currentDefense = parseInt(cardElement.getAttribute('data-current-defense'));
+            const cardId = cardElement.getAttribute('data-id');
+
+            currentDefense -= damage;
+            
+            if (currentDefense < 0) currentDefense = 0; 
+
+            if (currentDefense <= 0) {
+                // Carta Destruida
+                console.log(`¡Carta ${cardElement.querySelector('.card-name').textContent || 'sin nombre'} DESTRUIDA!`);
+                cardElement.classList.add('destroyed'); 
+                
+                setTimeout(() => {
+                     // Resetea el slot a su estado inicial
+                     const slotId = cardElement.parentNode.getAttribute('data-slot-id');
+                     const slotType = cardElement.parentNode.classList.contains('opponent-drop-zone') ? 'Oponente Slot ' : 'Tu Slot ';
+                     cardElement.parentNode.innerHTML = slotType + slotId.slice(-1); 
+                }, 500);
+                
+            } else {
+                // Actualiza la vida (Defensa)
+                cardElement.setAttribute('data-current-defense', currentDefense);
+                
+                const defenseDisplay = cardElement.querySelector(`#def-${cardId}`);
+                if (defenseDisplay) {
+                    defenseDisplay.textContent = `🛡️ ${currentDefense}`;
+                }
+            }
+        }
+
+
         function processCombatPhase() {
+            if (checkGameEnd()) return;
+
             console.log("----------------------");
-            console.log("INICIO DE FASE DE COMBATE");
+            console.log("INICIO DE FASE DE COMBATE (Solo Cartas)");
             
             const playerSlots = document.querySelectorAll('.player-field-row .drop-zone');
+            const opponentSlots = document.querySelectorAll('.opponent-row .drop-zone'); 
             
+            // En este modo, el "ataque directo" no hace nada ya que los jugadores no tienen PV.
+            // Solo se procesan los combates de cuerpo a cuerpo.
+
             playerSlots.forEach((playerSlot, index) => {
-                const playerCardStats = getCardStats(playerSlot);
-                
-                if (playerCardStats && playerCardStats.tipo === 'Luchador') {
-                    const damage = playerCardStats.ataque;
+                const playerCardVisual = playerSlot.querySelector('.card-visual');
+                const opponentSlot = opponentSlots[index]; 
+                const opponentCardVisual = opponentSlot ? opponentSlot.querySelector('.card-visual') : null;
+
+                if (playerCardVisual) {
+                    const playerCardStats = getCardStats(playerSlot);
                     
-                    if (damage > 0) {
-                        console.log(`Carta del jugador en Slot ${index + 1} ataca con ${damage}.`);
-                        opponentLosesCards(damage); 
+                    if (playerCardStats && playerCardStats.tipo === 'Luchador') {
+                        const playerAttack = playerCardStats.ataque;
+                        
+                        if (opponentCardVisual && getCardStats(opponentSlot).tipo === 'Luchador') {
+                            // COMBATE CUERPO A CUERPO (Luchador vs Luchador)
+                            const opponentCardStats = getCardStats(opponentSlot);
+                            const opponentAttack = opponentCardStats.ataque;
+                            
+                            console.log(`Combate en slot ${index + 1}: Jugador ⚔️${playerAttack} vs Oponente ⚔️${opponentAttack}`);
+
+                            updateCardDefense(opponentCardVisual, playerAttack); 
+                            updateCardDefense(playerCardVisual, opponentAttack);
+                            
+                        } else if (playerAttack > 0) {
+                            // ATAQUE DIRECTO (Ignorado, no hay PV de jugador/oponente)
+                            console.log(`Ataque Directo ignorado por falta de PV en jugadores.`);
+                        }
                     }
                 }
             });
+
+            // El ataque directo del oponente también se ignora.
             
             console.log("FIN DE FASE DE COMBATE");
             console.log("----------------------");
         }
 
-        function opponentLosesCards(count) {
-            console.log(`El Oponente ha perdido la cuenta de ${count} cartas (Simulación de daño al mazo/mano).`);
-            // Aquí se verificaría la condición de victoria/derrota del oponente.
+        // **====================================================**
+        // ** CONTROL DE TURNOS Y SIMULACIÓN DE OPONENTE **
+        // **====================================================**
+
+        function opponentTurnSimulation() {
+            // Jugar una carta Luchadora si hay un slot vacío.
+            const opponentSlots = document.querySelectorAll('.opponent-row .drop-zone');
+            const availableSlot = Array.from(opponentSlots).find(slot => !slot.querySelector('.card-visual'));
+            
+            if (availableSlot) {
+                // Carta oponente con 10 de vida base
+                availableSlot.innerHTML = createOpponentCardHTML({
+                    id: 'op' + availableSlot.getAttribute('data-slot-id').slice(-1), 
+                    nombre: 'Guerrero Oscuro', 
+                    ataque: 2, 
+                    defensa: 10, // <--- 10 DE VIDA BASE
+                    tipo: 'Luchador'
+                });
+                console.log("Oponente jugó un Guerrerro Oscuro en un slot vacío.");
+            }
+            else {
+                console.log("Campo del Oponente lleno. No juega cartas adicionales.");
+            }
         }
+
+        function createOpponentCardHTML(card) {
+            return `
+                <div class="card-visual opponent-card" data-id="${card.id}" data-type="${card.tipo}" data-current-defense="${card.defensa}">
+                    <div class="card-cost">?</div>
+                    <div class="card-name">${card.nombre}</div>
+                    <div class="card-image-placeholder" style="background-color: #3a1e1e;">OPONENTE</div>
+                    <div class="card-stats">
+                         <span class="stat-value stat-atk">⚔️ ${card.ataque}</span>
+                         <span class="stat-value stat-def" id="def-${card.id}">🛡️ ${card.defensa}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function endTurn() {
+            if (checkGameEnd()) return;
+
+            console.log("======================================");
+            console.log("FIN DEL TURNO DEL JUGADOR");
+            
+            processCombatPhase();
+            
+            isPlayerTurn = false;
+            document.querySelector('.end-turn-button').disabled = true;
+
+            setTimeout(() => {
+                console.log("... Simulación de Turno del Oponente...");
+                opponentTurnSimulation(); 
+                startPlayerTurn();
+            }, 2000); 
+        }
+
+        function startPlayerTurn() {
+            if (checkGameEnd()) return;
+
+            console.log("======================================");
+            console.log("INICIO DEL TURNO DEL JUGADOR");
+            isPlayerTurn = true;
+            
+            const endTurnButton = document.querySelector('.end-turn-button');
+            if (endTurnButton) {
+                endTurnButton.disabled = false;
+            }
+            
+            drawCard(); 
+            
+            maxMana = Math.min(maxMana + 1, 10); 
+            startTurn(); 
+            
+            addDragDropListeners(); 
+            
+            console.log(`¡Tu turno! Maná máximo ahora es: ${maxMana}`);
+        }
+
+        // **====================================================**
+        // ** CARGA Y DIBUJO DE CARTAS **
+        // **====================================================**
 
         function drawCard() {
             const handContainer = document.getElementById('player-hand');
@@ -496,47 +747,10 @@
                 console.log(`Carta robada: ${cardData.nombre}. Cartas restantes en el mazo: ${deck.length}`);
                 
             } else {
-                console.error("¡El mazo está vacío! Deberías perder la partida.");
-                alert("¡Derrota! Tu mazo se ha agotado. Fin del Juego.");
-                document.querySelector('.end-turn-button').disabled = true;
+                checkGameEnd(); 
             }
         }
-
-        function endTurn() {
-            console.log("======================================");
-            console.log("FIN DEL TURNO DEL JUGADOR");
-            
-            processCombatPhase();
-            
-            isPlayerTurn = false;
-            document.querySelector('.end-turn-button').disabled = true;
-
-            setTimeout(() => {
-                console.log("... Simulación de Turno del Oponente...");
-                startPlayerTurn();
-            }, 2000); 
-        }
-
-        function startPlayerTurn() {
-            console.log("======================================");
-            console.log("INICIO DEL TURNO DEL JUGADOR");
-            isPlayerTurn = true;
-            document.querySelector('.end-turn-button').disabled = false;
-            
-            drawCard(); 
-            
-            maxMana = Math.min(maxMana + 1, 10); 
-            startTurn();
-            
-            addDragDropListeners(); 
-            
-            console.log(`¡Tu turno! Maná máximo ahora es: ${maxMana}`);
-        }
-
-        // **----------------------------------------------------**
-        // ** CARGA Y DIBUJO DE CARTAS **
-        // **----------------------------------------------------**
-
+        
         async function loadCardData() {
             try {
                 const response = await fetch('data/cartas.json'); 
@@ -560,20 +774,26 @@
             cardElement.setAttribute('draggable', 'true'); 
             cardElement.setAttribute('data-cost', card.costo);
             cardElement.setAttribute('data-id', card.id);
+            cardElement.setAttribute('data-type', card.tipo); 
+            cardElement.setAttribute('data-value', card.valor || 0); 
+            cardElement.setAttribute('data-effect', card.efecto || ''); 
+
+            const defenseValue = card.defensa || 10; // <--- VIDA BASE DE 10 PARA LUCHADORES
+            if (card.tipo === 'Luchador') {
+                cardElement.setAttribute('data-current-defense', defenseValue); 
+            }
             
-            // Contenido HTML de la carta
             cardElement.innerHTML = `
                 <div class="card-cost">${card.costo}</div>
                 <div class="card-name">${card.nombre}</div>
                 <div class="card-image-placeholder">
-                    ${card.tipo}
+                    ${card.imagen ? `<img src="assets/${card.imagen}" alt="${card.nombre}" style="width: 100%; height: 100%; object-fit: cover;">` : card.tipo}
                 </div>
                 <div class="card-stats">
                     ${card.tipo === 'Luchador' ? 
-                        // Defensa fija en 10
                         `<span class="stat-value stat-atk">⚔️ ${card.ataque}</span>
-                         <span class="stat-value stat-def">🛡️ 10</span>` 
-                        : `<span class="stat-value stat-habilidad">${card.efecto} ${card.valor}</span>`
+                         <span class="stat-value stat-def" id="def-${card.id}">🛡️ ${defenseValue}</span>` 
+                        : `<span class="stat-value stat-habilidad">${card.efecto} ${card.valor || ''}</span>`
                     }
                 </div>
             `;
@@ -599,9 +819,9 @@
             return Promise.resolve();
         }
 
-        // **----------------------------------------------------**
+        // **====================================================**
         // ** INICIALIZACIÓN PRINCIPAL **
-        // **----------------------------------------------------**
+        // **====================================================**
 
         window.onload = function() {
             
