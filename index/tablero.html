@@ -3,833 +3,706 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verso y Venganza - Tablero de Juego (Combate Solo de Cartas)</title>
-    
+    <title>Las Luchas de las Tribus - Tablero</title>
     <style>
-        /* ---------------------------------------------------- */
-        /* ESTILOS BASE Y LAYOUT GENERAL */
-        /* ---------------------------------------------------- */
-        
-        body {
+        * {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden; 
-            font-family: Arial, sans-serif; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #3d3b37; 
-        }
-        
-        .game-board-container {
-            /* Fondo rústico */
-            background: linear-gradient(to bottom, #d48e00 0%, #a36f00 50%, #7d5200 100%);
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        .rustic-frame {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .center-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 60%;
-            height: 80%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
-            box-shadow: 0 0 100px 50px rgba(255, 255, 255, 0.1);
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .game-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: grid;
-            grid-template-rows: 80% 20%; 
-            z-index: 5; 
-            padding: 20px 0;
             box-sizing: border-box;
         }
 
-        .combat-area {
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #8B4513 0%, #654321 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .game-container {
+            width: 95%;
+            height: 95vh;
+            background: rgba(0, 0, 0, 0.3);
+            border: 4px solid #ffcc00;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        /* Header con información */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .player-info {
+            font-size: 1.2em;
+        }
+
+        /* Zona de combate */
+        .combat-zone {
+            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
-            align-items: center;
-        }
-        
-        /* ZONA DE LA MANO DEL JUGADOR (Abajo) */
-        .hand-area {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 25px; 
-            padding: 0 50px;
-        }
-
-        /* Mazo Apilado */
-        .deck-stack {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 20; 
-        }
-        
-        .deck-stack .card-visual {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 90px; 
-            height: 130px;
-            line-height: 130px;
-            background-color: #000;
-            border: 3px solid white;
-            color: white;
-            text-align: center;
-        }
-        .deck-stack .card-visual:nth-child(1) { transform: translate(6px, 6px); }
-        .deck-stack .card-visual:nth-child(2) { transform: translate(3px, 3px); }
-        .deck-stack .card-visual:nth-child(3) { transform: translate(0, 0); }
-        
-        .combat-slot {
-            width: 180px;
-            height: 250px;
-            border: 3px dashed rgba(255, 255, 255, 0.3);
-            background-color: rgba(0, 0, 0, 0.1);
-            text-align: center;
-            line-height: 250px;
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: bold;
-            display: flex; 
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .opponent-row, .player-field-row {
-            display: flex;
-            justify-content: center;
             gap: 20px;
-            width: 80%;
-        }
-        
-        .opponent-row {
-            border-bottom: 2px dashed rgba(255, 255, 255, 0.2);
-            padding-bottom: 20px;
-        }
-        
-        .player-field-row {
-            padding-top: 20px;
-        }
-        
-        .end-turn-button {
-            position: absolute;
-            right: 40px;
-            bottom: 40px;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            background-color: #e6675e; 
-            color: white;
-            border: 3px solid #ffcc00; 
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            z-index: 30;
         }
 
-        /* ---------------------------------------------------- */
-        /* ESTILOS DE CARTA Y RECURSOS */
-        /* ---------------------------------------------------- */
-        
-        .player-info {
-            display: flex;
-            flex-direction: column; 
-            align-items: center;
-            padding: 8px 15px;
-        }
-
-        /* ESTILO DE MANÁ */
-        .mana-points {
-            display: block;
-            margin-top: 5px;
-            color: #ffcc00; 
-            font-size: 1.2em;
-            background-color: rgba(0, 0, 0, 0.4);
-            padding: 3px 8px;
-            border-radius: 3px;
-            border: 1px solid #ffcc00;
-        }
-
-        /* Estilos de carta */
-        .card-visual {
-            width: 140px; 
-            height: 200px;
-            border: 5px solid transparent; 
-            border-image: url('assets/marco_carta_rustico.png') 30 round; 
-            background-color: #5d0f19; 
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px;
-            box-sizing: border-box;
-            color: white;
-            position: relative;
-            line-height: normal;
-            transition: transform 0.2s; 
-        }
-        
-        .hand-area .card-visual:hover {
-            transform: scale(1.05) translateY(-5px);
-            z-index: 100;
-        }
-
-        .card-name {
-            font-size: 1em;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 2px;
-            height: 20px;
-            overflow: hidden;
-        }
-
-        .card-image-placeholder {
-            width: 90%;
-            height: 100px;
-            background-color: #999; 
-            border-radius: 5px;
-            margin: 5px 0;
+        .battle-row {
             display: flex;
             justify-content: center;
-            align-items: center;
-            font-size: 0.8em;
+            gap: 15px;
+            padding: 10px;
         }
 
-        .card-cost {
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
-            text-align: center;
-            background-color: #ffcc00; 
-            color: #000;
-            border-radius: 50%;
-            font-weight: bolder;
-            border: 2px solid #5d0f19;
-            z-index: 10;
+        .opponent-row {
+            border-bottom: 2px dashed rgba(255, 255, 255, 0.3);
         }
-        
+
+        /* Slots de combate */
+        .combat-slot {
+            width: 140px;
+            height: 200px;
+            border: 3px dashed rgba(255, 255, 255, 0.4);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .combat-slot.occupied {
+            border-style: solid;
+            border-color: #ffcc00;
+        }
+
+        /* Cartas */
+        .card {
+            width: 130px;
+            height: 190px;
+            background: linear-gradient(135deg, #5d0f19 0%, #3a0a10 100%);
+            border: 3px solid #f5e6b9;
+            border-radius: 8px;
+            padding: 8px;
+            cursor: grab;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #ffcc00;
+        }
+
+        .card-header {
+            font-size: 0.9em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 5px;
+            color: #ffcc00;
+        }
+
+        .card-image {
+            width: 100%;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            font-size: 0.7em;
+        }
+
         .card-stats {
             display: flex;
             justify-content: space-around;
-            width: 100%;
-            margin-bottom: 5px;
+            font-size: 0.9em;
+            margin-top: 5px;
         }
-        
-        .stat-value {
-            font-size: 1.1em;
-            font-weight: bold;
-            padding: 2px 8px;
+
+        .stat {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3px 6px;
             border-radius: 3px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border: 1px solid white;
-        }
-        
-        .stat-atk {
-            color: #e6675e; 
-        }
-        
-        .stat-def {
-            color: #4CAF50;
-        }
-        
-        .card-visual.habilidad .stat-value {
-            color: #00bcd4; 
-        }
-        
-        .card-visual.habilidad .card-stats > .stat-atk,
-        .card-visual.habilidad .card-stats > .stat-def {
-            display: none;
         }
 
-        /* ---------------------------------------------------- */
-        /* ESTILOS AÑADIDOS PARA COMBATE Y ANIMACIONES */
-        /* ---------------------------------------------------- */
+        .stat-atk { color: #ff4444; }
+        .stat-vida { color: #44ff44; }
+        .stat-vel { color: #4444ff; }
+        .stat-cur { color: #ffaa00; }
 
-        /* Animación de "Flotar" para cartas en la mano */
-        #player-hand .card-visual {
-            transition: transform 0.3s, box-shadow 0.3s; 
-            animation: floating 3s ease-in-out infinite;
-        }
-
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
-        }
-
-        /* Efecto de "Muerte" de Carta */
-        .card-visual.destroyed {
-            transition: all 0.5s ease-out;
-            opacity: 0;
-            transform: scale(0.5) rotate(15deg) translateY(50px);
-        }
-
-        /* Estilo para cartas del oponente */
-        .card-visual.opponent-card {
-            background-color: #3a1e1e; 
-            border-color: #ff0000;
-            border-image: none;
+        /* Mano del jugador */
+        .hand-zone {
+            height: 220px;
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 10px;
-            border: 5px solid #ff0000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            border: 2px solid #ffcc00;
         }
-        .card-visual.opponent-card .card-image-placeholder {
-             background-color: #5d0f19;
+
+        /* Botones */
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            background: #e6675e;
+            color: white;
+            border: 3px solid #ffcc00;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #c44f45;
+        }
+
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        /* Carta del oponente */
+        .card.opponent {
+            background: linear-gradient(135deg, #1a0a0a 0%, #0a0505 100%);
+            border-color: #ff0000;
+        }
+
+        /* Mensajes de log */
+        .game-log {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            width: 300px;
+            max-height: 400px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffcc00;
+            border-radius: 5px;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 0.85em;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 3px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
 <body>
-
-    <div class="game-board-container">
-        
-        <div class="rustic-frame">
-            <div class="center-glow"></div>
-        </div>
-
-        <div class="deck-stack">
-            <div class="card-visual"></div>
-            <div class="card-visual"></div>
-            <div class="card-visual"></div>
-        </div>
-        
-        <div class="game-content">
-
-            <div class="combat-area">
-                
-                <div class="opponent-row">
-                    <div class="combat-slot drop-zone opponent-drop-zone" data-slot-id="o-slot-1">Oponente Slot 1</div>
-                    <div class="combat-slot drop-zone opponent-drop-zone" data-slot-id="o-slot-2">Oponente Slot 2</div>
-                    <div class="combat-slot drop-zone opponent-drop-zone" data-slot-id="o-slot-3">Oponente Slot 3</div>
-                    <div class="combat-slot drop-zone opponent-drop-zone" data-slot-id="o-slot-4">Oponente Slot 4</div>
-                    <div class="combat-slot drop-zone opponent-drop-zone" data-slot-id="o-slot-5">Oponente Slot 5</div>
-                </div>
-
-                <div class="player-field-row">
-                    <div class="combat-slot drop-zone" data-slot-id="p-slot-1">Tu Slot 1</div>
-                    <div class="combat-slot drop-zone" data-slot-id="p-slot-2">Tu Slot 2</div>
-                    <div class="combat-slot drop-zone" data-slot-id="p-slot-3">Tu Slot 3</div>
-                    <div class="combat-slot drop-zone" data-slot-id="p-slot-4">Tu Slot 4</div>
-                    <div class="combat-slot drop-zone" data-slot-id="p-slot-5">Tu Slot 5</div>
-                </div>
-
+    <div class="game-container">
+        <!-- Header -->
+        <div class="game-header">
+            <div class="player-info">
+                <strong>Tribu Orah (Tú)</strong>
             </div>
-
-            <div id="player-hand" class="hand-area">
+            <div class="player-info" style="text-align: center;">
+                <div style="font-size: 1.5em; color: #ffcc00;" id="timer">2:00</div>
+                <div id="night-mode-indicator" style="display: none; color: #4444ff;">🌙 MODO NOCHE 🌙</div>
+                <div style="font-size: 0.9em;">Cartas en mazo: <span id="deck-count">0</span></div>
             </div>
-            
-        </div>
-        
-        <div style="position: absolute; top: 10px; right: 20px; z-index: 40;">
-            <div class="player-info player-2-side">
-                <span class="player-name" style="color: white; font-weight: bold;">Tribu Orah (Tú)</span>
-                <span id="player-mana" class="mana-points">✨ 0 / 5</span> 
+            <div class="player-info">
+                <strong>Tribu Enemiga</strong>
             </div>
         </div>
-        
-        <div style="position: absolute; top: 10px; left: 160px; z-index: 40;">
-            <div class="player-info player-1-side">
-                <span class="player-name" style="color: white; font-weight: bold;">Tribu Enemiga</span>
-                </div>
+
+        <!-- Zona de combate -->
+        <div class="combat-zone">
+            <!-- Fila del oponente -->
+            <div class="battle-row opponent-row" id="opponent-field">
+                <div class="combat-slot" data-slot="0"></div>
+                <div class="combat-slot" data-slot="1"></div>
+                <div class="combat-slot" data-slot="2"></div>
+                <div class="combat-slot" data-slot="3"></div>
+                <div class="combat-slot" data-slot="4"></div>
+            </div>
+
+            <!-- Fila del jugador -->
+            <div class="battle-row player-row" id="player-field">
+                <div class="combat-slot" data-slot="0"></div>
+                <div class="combat-slot" data-slot="1"></div>
+                <div class="combat-slot" data-slot="2"></div>
+                <div class="combat-slot" data-slot="3"></div>
+                <div class="combat-slot" data-slot="4"></div>
+            </div>
         </div>
 
-        <button class="end-turn-button" onclick="endTurn()">Finalizar Turno ➡️</button>
+        <!-- Mano del jugador -->
+        <div class="hand-zone" id="player-hand">
+            <!-- Las cartas se cargarán aquí -->
+        </div>
 
+        <!-- Controles -->
+        <div class="controls">
+            <button onclick="window.location.href='index.html'">Volver al Menú</button>
+            <button id="end-turn-btn" onclick="endTurn()">Finalizar Turno</button>
+        </div>
+    </div>
+
+    <!-- Log de eventos -->
+    <div class="game-log" id="game-log">
+        <strong>--- Log de Juego ---</strong>
     </div>
 
     <script>
-        // **====================================================**
-        // ** VARIABLES GLOBALES DE JUEGO (PV ELIMINADOS) **
-        // **====================================================**
-
-        let currentMana = 0; 
-        let maxMana = 5;
-        let draggedCard = null; 
-        let deck = []; // Mazo completo del jugador
-        let isPlayerTurn = true; 
-
-        // Los contadores de vida del jugador/oponente han sido eliminados del gameplay.
-        // La victoria/derrota ahora se basa SOLO en el agotamiento del mazo/mano.
+        // ========================================
+        // VARIABLES GLOBALES
+        // ========================================
+        let deck = [];
+        let playerHand = [];
+        let playerField = [null, null, null, null, null];
+        let opponentField = [null, null, null, null, null];
+        let currentTurn = 1;
+        let gameActive = true;
         
-        // **====================================================**
-        // ** GESTIÓN DE RECURSOS (MANÁ) Y TURNOS **
-        // **====================================================**
+        // Variables del timer y modo noche
+        let timeRemaining = 120; // 2 minutos = 120 segundos
+        let timerInterval = null;
+        let nightModeActive = false;
 
-        function updateManaDisplay() {
-            const manaDisplay = document.getElementById('player-mana');
-            if (manaDisplay) {
-                manaDisplay.textContent = `✨ ${currentMana} / ${maxMana}`;
-            }
+        // ========================================
+        // FUNCIONES DE LOG
+        // ========================================
+        function addLog(message) {
+            const logDiv = document.getElementById('game-log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = `[Turno ${currentTurn}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
         }
 
-        function startTurn() {
-            currentMana = maxMana;
-            updateManaDisplay();
-            console.log(`Turno iniciado. Recursos: ${currentMana}/${maxMana}`);
-        }
-
-        function payCardCost(cost) {
-            if (currentMana >= cost) {
-                currentMana -= cost;
-                updateManaDisplay();
-                return true; 
-            } else {
-                console.warn(`¡ALERTA! Maná insuficiente. Requerido: ${cost}, Disponible: ${currentMana}`);
-                return false; 
-            }
-        }
-
-        // **====================================================**
-        // ** LÓGICA DE DRAG AND DROP (ARRRASTRAR Y SOLTAR) **
-        // **====================================================**
-
-        function handleDragStart(e) {
-            draggedCard = this;
-            
-            const cost = this.getAttribute('data-cost');
-            const type = this.getAttribute('data-type'); 
-            const value = this.getAttribute('data-value'); 
-            const effect = this.getAttribute('data-effect');
-
-            e.dataTransfer.setData('text/cost', cost);
-            e.dataTransfer.setData('text/type', type); 
-            e.dataTransfer.setData('text/value', value); 
-            e.dataTransfer.setData('text/effect', effect);
-
-            setTimeout(() => (this.style.visibility = 'hidden'), 0); 
-        }
-
-        function handleDragEnd(e) {
-            this.style.visibility = 'visible';
-            draggedCard = null;
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault(); 
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            
-            const dropZone = this;
-            const isPlayerField = dropZone.closest('.player-field-row') !== null; 
-
-            const cost = parseInt(e.dataTransfer.getData('text/cost'));
-            const type = e.dataTransfer.getData('text/type');
-            
-            if (!payCardCost(cost)) {
-                return; 
-            }
-            
-            if (type === 'Luchador') {
-                if (!isPlayerField || dropZone.querySelector('.card-visual')) {
-                    console.log("Slot ya ocupado o zona inválida. No se puede jugar aquí.");
-                    currentMana += cost; 
-                    updateManaDisplay();
+        // ========================================
+        // SISTEMA DE TIMER Y MODO NOCHE
+        // ========================================
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (!gameActive) {
+                    clearInterval(timerInterval);
                     return;
                 }
+                
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                // Activar modo noche al minuto 1 (60 segundos restantes)
+                if (timeRemaining === 60 && !nightModeActive) {
+                    activateNightMode();
+                }
+                
+                // Fin del tiempo
+                if (timeRemaining <= 0) {
+                    endGame('tiempo');
+                }
+            }, 1000);
+        }
 
-                draggedCard.style.visibility = 'visible'; 
-                draggedCard.parentNode.removeChild(draggedCard);
-                dropZone.appendChild(draggedCard);
-                
-                draggedCard.setAttribute('draggable', 'false');
-                draggedCard.removeEventListener('dragstart', handleDragStart);
-                draggedCard.removeEventListener('dragend', handleDragEnd);
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const timerDisplay = document.getElementById('timer');
+            timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Cambiar color cuando queda poco tiempo
+            if (timeRemaining <= 30) {
+                timerDisplay.style.color = '#ff4444';
+            } else if (timeRemaining <= 60) {
+                timerDisplay.style.color = '#ffaa00';
+            }
+        }
 
-                console.log(`¡Luchador jugado con éxito! Costo: ${cost}. Maná restante: ${currentMana}`);
-                
-            } else if (type === 'Habilidad' || type === 'Curación') {
-                
-                if (isPlayerField) { 
-                    const value = parseInt(e.dataTransfer.getData('text/value'));
-                    const effect = e.dataTransfer.getData('text/effect');
-                    applyAbility(effect, value); 
+        function activateNightMode() {
+            nightModeActive = true;
+            addLog('🌙 ¡MODO NOCHE ACTIVADO! Todos los luchadores pierden 1 de vida');
+            
+            // Mostrar indicador visual
+            document.getElementById('night-mode-indicator').style.display = 'block';
+            document.body.style.background = 'linear-gradient(to bottom, #1a0f2e 0%, #0a0514 100%)';
+            
+            // Aplicar daño a todos los luchadores en el campo
+            applyNightModeDamage();
+        }
+
+        function applyNightModeDamage() {
+            // Daño al campo del jugador
+            playerField.forEach((card, index) => {
+                if (card && card.tipo === 'Luchador') {
+                    card.vida -= 1;
+                    addLog(`${card.nombre} pierde 1 de vida (Modo Noche)`);
                     
-                    draggedCard.parentNode.removeChild(draggedCard);
-                    console.log(`¡Habilidad jugada! Efecto: ${effect}. Carta desechada.`);
-                } else {
-                    console.warn("Las habilidades solo se pueden jugar en el campo del jugador.");
-                    currentMana += cost;
-                    updateManaDisplay();
-                    return;
-                }
-            }
-        }
-
-        function addDragDropListeners() {
-            const cards = document.querySelectorAll('#player-hand .card-visual');
-            cards.forEach(card => {
-                if (card.getAttribute('draggable') === 'true') {
-                    card.addEventListener('dragstart', handleDragStart);
-                    card.addEventListener('dragend', handleDragEnd);
-                }
-            });
-
-            const dropZones = document.querySelectorAll('.player-field-row .drop-zone');
-            dropZones.forEach(zone => {
-                zone.addEventListener('dragover', handleDragOver);
-                zone.addEventListener('drop', handleDrop);
-            });
-            console.log("Eventos de Drag and Drop inicializados.");
-        }
-
-        // **====================================================**
-        // ** LÓGICA DE HABILIDADES **
-        // **====================================================**
-
-        function applyAbility(effect, value) {
-            if (effect === 'Maná') {
-                currentMana = Math.min(currentMana + value, 10); 
-                updateManaDisplay();
-            } else if (effect === 'Robo') {
-                for (let i = 0; i < value; i++) {
-                    drawCard();
-                }
-            } else if (effect === 'Curación') {
-                 console.log(`¡Curación no implementada! Curar ${value}`);
-            } 
-        }
-
-        // **====================================================**
-        // ** GESTIÓN DE PUNTOS DE VIDA (PV) Y VICTORIA/DERROTA **
-        // ** (PV de Jugadores ELIMINADOS) **
-        // **====================================================**
-
-        function checkGameEnd() {
-            // ** Condición de Derrota/Victoria basada en el Mazo/Mano **
-            if (deck.length === 0 && document.getElementById('player-hand').children.length === 0) {
-                alert("¡DERROTA! Te quedaste sin cartas para robar y sin mano. (Simulación de Derrota)");
-                disableGameControls();
-                return true;
-            }
-            
-            // Nota: Se necesitaría una lógica más robusta para determinar la victoria del oponente 
-            // (ej. el oponente tiene su campo lleno y el jugador no puede robar/jugar).
-
-            return false;
-        }
-
-        function disableGameControls() {
-            const endTurnButton = document.querySelector('.end-turn-button');
-            if (endTurnButton) endTurnButton.disabled = true;
-            document.querySelectorAll('#player-hand .card-visual').forEach(card => card.setAttribute('draggable', 'false'));
-        }
-
-        // ** Las funciones playerLosesHealth y opponentLosesHealth ya no son necesarias **
-        // ** en el juego, solo para efectos de habilidad si los hubiere **
-        
-        // **====================================================**
-        // ** LÓGICA DE COMBATE DIRECTO Y DAÑO A LUCHADORES **
-        // **====================================================**
-
-        function getCardStats(slotElement) {
-            const cardVisual = slotElement.querySelector('.card-visual');
-            if (!cardVisual) return null;
-
-            const attackSpan = cardVisual.querySelector('.stat-atk');
-            const attackValue = attackSpan ? parseInt(attackSpan.textContent.replace('⚔️', '').trim()) : 0;
-            
-            const cardType = cardVisual.getAttribute('data-type') || (attackValue > 0 ? 'Luchador' : 'Habilidad');
-            
-            return { 
-                ataque: attackValue,
-                tipo: cardType 
-            };
-        }
-
-        function updateCardDefense(cardElement, damage) {
-            let currentDefense = parseInt(cardElement.getAttribute('data-current-defense'));
-            const cardId = cardElement.getAttribute('data-id');
-
-            currentDefense -= damage;
-            
-            if (currentDefense < 0) currentDefense = 0; 
-
-            if (currentDefense <= 0) {
-                // Carta Destruida
-                console.log(`¡Carta ${cardElement.querySelector('.card-name').textContent || 'sin nombre'} DESTRUIDA!`);
-                cardElement.classList.add('destroyed'); 
-                
-                setTimeout(() => {
-                     // Resetea el slot a su estado inicial
-                     const slotId = cardElement.parentNode.getAttribute('data-slot-id');
-                     const slotType = cardElement.parentNode.classList.contains('opponent-drop-zone') ? 'Oponente Slot ' : 'Tu Slot ';
-                     cardElement.parentNode.innerHTML = slotType + slotId.slice(-1); 
-                }, 500);
-                
-            } else {
-                // Actualiza la vida (Defensa)
-                cardElement.setAttribute('data-current-defense', currentDefense);
-                
-                const defenseDisplay = cardElement.querySelector(`#def-${cardId}`);
-                if (defenseDisplay) {
-                    defenseDisplay.textContent = `🛡️ ${currentDefense}`;
-                }
-            }
-        }
-
-
-        function processCombatPhase() {
-            if (checkGameEnd()) return;
-
-            console.log("----------------------");
-            console.log("INICIO DE FASE DE COMBATE (Solo Cartas)");
-            
-            const playerSlots = document.querySelectorAll('.player-field-row .drop-zone');
-            const opponentSlots = document.querySelectorAll('.opponent-row .drop-zone'); 
-            
-            // En este modo, el "ataque directo" no hace nada ya que los jugadores no tienen PV.
-            // Solo se procesan los combates de cuerpo a cuerpo.
-
-            playerSlots.forEach((playerSlot, index) => {
-                const playerCardVisual = playerSlot.querySelector('.card-visual');
-                const opponentSlot = opponentSlots[index]; 
-                const opponentCardVisual = opponentSlot ? opponentSlot.querySelector('.card-visual') : null;
-
-                if (playerCardVisual) {
-                    const playerCardStats = getCardStats(playerSlot);
-                    
-                    if (playerCardStats && playerCardStats.tipo === 'Luchador') {
-                        const playerAttack = playerCardStats.ataque;
-                        
-                        if (opponentCardVisual && getCardStats(opponentSlot).tipo === 'Luchador') {
-                            // COMBATE CUERPO A CUERPO (Luchador vs Luchador)
-                            const opponentCardStats = getCardStats(opponentSlot);
-                            const opponentAttack = opponentCardStats.ataque;
-                            
-                            console.log(`Combate en slot ${index + 1}: Jugador ⚔️${playerAttack} vs Oponente ⚔️${opponentAttack}`);
-
-                            updateCardDefense(opponentCardVisual, playerAttack); 
-                            updateCardDefense(playerCardVisual, opponentAttack);
-                            
-                        } else if (playerAttack > 0) {
-                            // ATAQUE DIRECTO (Ignorado, no hay PV de jugador/oponente)
-                            console.log(`Ataque Directo ignorado por falta de PV en jugadores.`);
-                        }
+                    if (card.vida <= 0) {
+                        addLog(`💀 ${card.nombre} ha sido derrotado por la noche`);
+                        playerField[index] = null;
                     }
                 }
             });
-
-            // El ataque directo del oponente también se ignora.
             
-            console.log("FIN DE FASE DE COMBATE");
-            console.log("----------------------");
+            // Daño al campo del oponente
+            opponentField.forEach((card, index) => {
+                if (card && card.tipo === 'Luchador') {
+                    card.vida -= 1;
+                    addLog(`${card.nombre} (enemigo) pierde 1 de vida (Modo Noche)`);
+                    
+                    if (card.vida <= 0) {
+                        addLog(`💀 ${card.nombre} (enemigo) ha sido derrotado por la noche`);
+                        opponentField[index] = null;
+                    }
+                }
+            });
+            
+            renderField();
         }
 
-        // **====================================================**
-        // ** CONTROL DE TURNOS Y SIMULACIÓN DE OPONENTE **
-        // **====================================================**
-
-        function opponentTurnSimulation() {
-            // Jugar una carta Luchadora si hay un slot vacío.
-            const opponentSlots = document.querySelectorAll('.opponent-row .drop-zone');
-            const availableSlot = Array.from(opponentSlots).find(slot => !slot.querySelector('.card-visual'));
-            
-            if (availableSlot) {
-                // Carta oponente con 10 de vida base
-                availableSlot.innerHTML = createOpponentCardHTML({
-                    id: 'op' + availableSlot.getAttribute('data-slot-id').slice(-1), 
-                    nombre: 'Guerrero Oscuro', 
-                    ataque: 2, 
-                    defensa: 10, // <--- 10 DE VIDA BASE
-                    tipo: 'Luchador'
-                });
-                console.log("Oponente jugó un Guerrerro Oscuro en un slot vacío.");
-            }
-            else {
-                console.log("Campo del Oponente lleno. No juega cartas adicionales.");
+        // ========================================
+        // CARGA DE CARTAS
+        // ========================================
+        async function loadCards() {
+            try {
+                const response = await fetch('data/cartas.json');
+                const data = await response.json();
+                
+                // Seleccionar 5 cartas aleatorias del mazo Orah
+                const orahCards = data.mazo_tribu_orah;
+                const shuffled = orahCards.sort(() => 0.5 - Math.random());
+                
+                // Tomar 3 luchadores y 2 curaciones
+                const luchadores = shuffled.filter(c => c.tipo === 'Luchador').slice(0, 3);
+                const curaciones = shuffled.filter(c => c.tipo === 'Curación').slice(0, 2);
+                
+                deck = [...luchadores, ...curaciones];
+                
+                addLog('Juego iniciado - 5 cartas en mano');
+                updateDeckCount();
+                drawInitialHand();
+            } catch (error) {
+                addLog('ERROR: No se pudo cargar cartas.json');
+                console.error(error);
             }
         }
 
-        function createOpponentCardHTML(card) {
-            return `
-                <div class="card-visual opponent-card" data-id="${card.id}" data-type="${card.tipo}" data-current-defense="${card.defensa}">
-                    <div class="card-cost">?</div>
-                    <div class="card-name">${card.nombre}</div>
-                    <div class="card-image-placeholder" style="background-color: #3a1e1e;">OPONENTE</div>
+        function updateDeckCount() {
+            document.getElementById('deck-count').textContent = deck.length;
+        }
+
+        function drawInitialHand() {
+            deck.forEach(card => {
+                playerHand.push(card);
+            });
+            renderHand();
+        }
+
+        // ========================================
+        // RENDERIZADO DE CARTAS
+        // ========================================
+        function renderHand() {
+            const handDiv = document.getElementById('player-hand');
+            handDiv.innerHTML = '';
+            
+            playerHand.forEach((card, index) => {
+                const cardElement = createCardElement(card, index);
+                handDiv.appendChild(cardElement);
+            });
+        }
+
+        function createCardElement(card, handIndex = -1) {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card';
+            cardDiv.draggable = true;
+            
+            if (handIndex >= 0) {
+                cardDiv.dataset.handIndex = handIndex;
+                cardDiv.ondragstart = dragStart;
+            }
+            
+            let statsHTML = '';
+            if (card.tipo === 'Luchador') {
+                statsHTML = `
                     <div class="card-stats">
-                         <span class="stat-value stat-atk">⚔️ ${card.ataque}</span>
-                         <span class="stat-value stat-def" id="def-${card.id}">🛡️ ${card.defensa}</span>
+                        <span class="stat stat-atk">⚔ ${card.ataque}</span>
+                        <span class="stat stat-vida">❤ ${card.vida}</span>
+                        <span class="stat stat-vel">⚡ ${card.velocidad}</span>
                     </div>
-                </div>
-            `;
-        }
-
-        function endTurn() {
-            if (checkGameEnd()) return;
-
-            console.log("======================================");
-            console.log("FIN DEL TURNO DEL JUGADOR");
-            
-            processCombatPhase();
-            
-            isPlayerTurn = false;
-            document.querySelector('.end-turn-button').disabled = true;
-
-            setTimeout(() => {
-                console.log("... Simulación de Turno del Oponente...");
-                opponentTurnSimulation(); 
-                startPlayerTurn();
-            }, 2000); 
-        }
-
-        function startPlayerTurn() {
-            if (checkGameEnd()) return;
-
-            console.log("======================================");
-            console.log("INICIO DEL TURNO DEL JUGADOR");
-            isPlayerTurn = true;
-            
-            const endTurnButton = document.querySelector('.end-turn-button');
-            if (endTurnButton) {
-                endTurnButton.disabled = false;
+                `;
+            } else {
+                statsHTML = `
+                    <div class="card-stats">
+                        <span class="stat stat-cur">✚ ${card.curacion}</span>
+                    </div>
+                `;
             }
             
-            drawCard(); 
+            cardDiv.innerHTML = `
+                <div class="card-header">${card.nombre}</div>
+                <div class="card-image">${card.tipo}</div>
+                <div style="font-size: 0.75em; text-align: center; margin: 5px 0;">
+                    ${card.descripcion.substring(0, 50)}...
+                </div>
+                ${statsHTML}
+            `;
             
-            maxMana = Math.min(maxMana + 1, 10); 
-            startTurn(); 
-            
-            addDragDropListeners(); 
-            
-            console.log(`¡Tu turno! Maná máximo ahora es: ${maxMana}`);
+            return cardDiv;
         }
 
-        // **====================================================**
-        // ** CARGA Y DIBUJO DE CARTAS **
-        // **====================================================**
+        // ========================================
+        // DRAG AND DROP
+        // ========================================
+        let draggedCardIndex = null;
 
-        function drawCard() {
-            const handContainer = document.getElementById('player-hand');
+        function dragStart(e) {
+            draggedCardIndex = parseInt(e.target.dataset.handIndex);
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        // Hacer que los slots acepten drop
+        document.addEventListener('DOMContentLoaded', () => {
+            const playerSlots = document.querySelectorAll('#player-field .combat-slot');
+            playerSlots.forEach(slot => {
+                slot.ondragover = dragOver;
+                slot.ondrop = drop;
+            });
+        });
+
+        function dragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function drop(e) {
+            e.preventDefault();
             
-            if (handContainer.children.length >= 5) {
-                console.warn("Mano llena (5 cartas). No se puede robar.");
+            if (draggedCardIndex === null) return;
+            
+            const slotIndex = parseInt(e.currentTarget.dataset.slot);
+            const card = playerHand[draggedCardIndex];
+            
+            // Verificar si el slot está ocupado
+            if (playerField[slotIndex] !== null) {
+                addLog('Ese slot ya está ocupado');
                 return;
             }
             
-            if (deck.length > 0) {
-                const cardData = deck.shift();
-                const cardElement = createCardElement(cardData);
-                handContainer.appendChild(cardElement);
-                
-                cardElement.addEventListener('dragstart', handleDragStart);
-                cardElement.addEventListener('dragend', handleDragEnd);
-                
-                console.log(`Carta robada: ${cardData.nombre}. Cartas restantes en el mazo: ${deck.length}`);
-                
-            } else {
-                checkGameEnd(); 
-            }
-        }
-        
-        async function loadCardData() {
-            try {
-                const response = await fetch('data/cartas.json'); 
-                if (!response.ok) {
-                    console.error(`Error de red al cargar JSON: HTTP error! status: ${response.status}`);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return await response.json();
-            } catch (error) {
-                console.error("No se pudieron cargar los datos de las cartas (Verifique data/cartas.json):", error);
-                return []; 
-            }
-        }
-
-        function createCardElement(card) {
-            const cardElement = document.createElement('div');
-            
-            let typeClass = (card.tipo === 'Habilidad' || card.tipo === 'Curación') ? ' habilidad' : '';
-            cardElement.className = 'card-visual' + typeClass;
-            
-            cardElement.setAttribute('draggable', 'true'); 
-            cardElement.setAttribute('data-cost', card.costo);
-            cardElement.setAttribute('data-id', card.id);
-            cardElement.setAttribute('data-type', card.tipo); 
-            cardElement.setAttribute('data-value', card.valor || 0); 
-            cardElement.setAttribute('data-effect', card.efecto || ''); 
-
-            const defenseValue = card.defensa || 10; // <--- VIDA BASE DE 10 PARA LUCHADORES
+            // Solo luchadores van al campo
             if (card.tipo === 'Luchador') {
-                cardElement.setAttribute('data-current-defense', defenseValue); 
+                playerField[slotIndex] = card;
+                playerHand.splice(draggedCardIndex, 1);
+                
+                addLog(`Jugaste: ${card.nombre}`);
+                renderHand();
+                renderField();
+            } else {
+                addLog('Las curaciones no se juegan en el campo');
             }
             
-            cardElement.innerHTML = `
-                <div class="card-cost">${card.costo}</div>
-                <div class="card-name">${card.nombre}</div>
-                <div class="card-image-placeholder">
-                    ${card.imagen ? `<img src="assets/${card.imagen}" alt="${card.nombre}" style="width: 100%; height: 100%; object-fit: cover;">` : card.tipo}
-                </div>
-                <div class="card-stats">
-                    ${card.tipo === 'Luchador' ? 
-                        `<span class="stat-value stat-atk">⚔️ ${card.ataque}</span>
-                         <span class="stat-value stat-def" id="def-${card.id}">🛡️ ${defenseValue}</span>` 
-                        : `<span class="stat-value stat-habilidad">${card.efecto} ${card.valor || ''}</span>`
-                    }
-                </div>
-            `;
-            return cardElement;
+            draggedCardIndex = null;
         }
 
-        async function initializeDeckAndHand() {
-            const allCards = await loadCardData();
+        function renderField() {
+            // Renderizar campo del jugador
+            const playerSlots = document.querySelectorAll('#player-field .combat-slot');
+            playerSlots.forEach((slot, index) => {
+                slot.innerHTML = '';
+                if (playerField[index]) {
+                    const card = createCardElement(playerField[index]);
+                    card.draggable = false;
+                    slot.appendChild(card);
+                    slot.classList.add('occupied');
+                } else {
+                    slot.classList.remove('occupied');
+                }
+            });
             
-            deck = allCards.sort(() => Math.random() - 0.5); 
+            // Renderizar campo del oponente
+            const opponentSlots = document.querySelectorAll('#opponent-field .combat-slot');
+            opponentSlots.forEach((slot, index) => {
+                slot.innerHTML = '';
+                if (opponentField[index]) {
+                    const card = createCardElement(opponentField[index]);
+                    card.classList.add('opponent');
+                    card.draggable = false;
+                    slot.appendChild(card);
+                    slot.classList.add('occupied');
+                } else {
+                    slot.classList.remove('occupied');
+                }
+            });
+        }
+
+        // ========================================
+        // FIN DEL JUEGO
+        // ========================================
+        function endGame(reason) {
+            gameActive = false;
+            clearInterval(timerInterval);
             
-            const handContainer = document.getElementById('player-hand');
+            let message = '';
+            if (reason === 'tiempo') {
+                // Contar luchadores vivos
+                const playerAlive = playerField.filter(c => c !== null).length;
+                const opponentAlive = opponentField.filter(c => c !== null).length;
+                
+                if (playerAlive > opponentAlive) {
+                    message = `⏰ ¡VICTORIA! Tiempo agotado. Tienes más luchadores (${playerAlive} vs ${opponentAlive})`;
+                } else if (opponentAlive > playerAlive) {
+                    message = `⏰ DERROTA. Tiempo agotado. El oponente tiene más luchadores (${opponentAlive} vs ${playerAlive})`;
+                } else {
+                    message = `⏰ EMPATE. Ambos tienen ${playerAlive} luchadores`;
+                }
+            } else if (reason === 'sin_cartas') {
+                message = '💀 DERROTA. Te quedaste sin cartas';
+            } else if (reason === 'victoria') {
+                message = '🎉 ¡VICTORIA! Derrotaste a todos los luchadores enemigos';
+            }
+            
+            addLog(message);
+            alert(message);
+            document.getElementById('end-turn-btn').disabled = true;
+        }
+        // ========================================
+        // LÓGICA DE TURNOS
+        // ========================================
+        function endTurn() {
+            if (!gameActive) return;
+            
+            addLog('--- Fin de tu turno ---');
+            
+            // Fase de combate
+            processCombat();
+            
+            // Verificar condiciones de victoria
+            checkVictoryConditions();
+            
+            // Turno del oponente
+            setTimeout(() => {
+                if (gameActive) {
+                    opponentTurn();
+                    currentTurn++;
+                    addLog('--- Tu turno ---');
+                }
+            }, 1500);
+        }
+
+        function checkVictoryConditions() {
+            const playerAlive = playerField.filter(c => c !== null).length;
+            const opponentAlive = opponentField.filter(c => c !== null).length;
+            
+            if (opponentAlive === 0 && playerAlive > 0) {
+                endGame('victoria');
+            } else if (playerAlive === 0 && opponentAlive > 0) {
+                endGame('sin_cartas');
+            }
+        }
+
+        function processCombat() {
+            addLog('=== FASE DE COMBATE ===');
             
             for (let i = 0; i < 5; i++) {
-                if (deck.length > 0) {
-                    const cardData = deck.shift(); 
-                    const cardElement = createCardElement(cardData);
-                    handContainer.appendChild(cardElement);
+                const playerCard = playerField[i];
+                const opponentCard = opponentField[i];
+                
+                if (playerCard && opponentCard) {
+                    // Combate directo
+                    resolveCombat(playerCard, opponentCard, i);
+                }
+            }
+        }
+
+        function resolveCombat(card1, card2, slotIndex) {
+            // Determinar quién ataca primero por velocidad
+            let attacker, defender;
+            if (card1.velocidad > card2.velocidad) {
+                attacker = card1;
+                defender = card2;
+            } else if (card2.velocidad > card1.velocidad) {
+                attacker = card2;
+                defender = card1;
+            } else {
+                // Mismo velocidad - aleatorio
+                if (Math.random() > 0.5) {
+                    attacker = card1;
+                    defender = card2;
+                } else {
+                    attacker = card2;
+                    defender = card1;
                 }
             }
             
-            console.log(`Mazo inicializado. Cartas en el mazo: ${deck.length}`);
-            return Promise.resolve();
+            // El atacante golpea primero
+            defender.vida -= attacker.ataque;
+            addLog(`${attacker.nombre} ataca a ${defender.nombre} (${attacker.ataque} daño)`);
+            
+            // Si el defensor sobrevive, contraataca
+            if (defender.vida > 0) {
+                attacker.vida -= defender.ataque;
+                addLog(`${defender.nombre} contraataca a ${attacker.nombre} (${defender.ataque} daño)`);
+            }
+            
+            // Eliminar cartas muertas
+            if (card1.vida <= 0) {
+                addLog(`💀 ${card1.nombre} ha sido derrotado`);
+                playerField[slotIndex] = null;
+            }
+            if (card2.vida <= 0) {
+                addLog(`💀 ${card2.nombre} ha sido derrotado`);
+                opponentField[slotIndex] = null;
+            }
+            
+            renderField();
         }
 
-        // **====================================================**
-        // ** INICIALIZACIÓN PRINCIPAL **
-        // **====================================================**
+        function opponentTurn() {
+            addLog('--- Turno del oponente ---');
+            
+            // Buscar un slot vacío
+            const emptySlot = opponentField.findIndex(slot => slot === null);
+            
+            if (emptySlot !== -1) {
+                // Crear una carta enemiga simple
+                const enemyCard = {
+                    id: 'enemy_' + Date.now(),
+                    nombre: 'Guerrero Nora',
+                    tipo: 'Luchador',
+                    ataque: Math.floor(Math.random() * 5) + 3,
+                    vida: Math.floor(Math.random() * 5) + 5,
+                    velocidad: Math.floor(Math.random() * 5) + 3
+                };
+                
+                opponentField[emptySlot] = enemyCard;
+                addLog(`Oponente jugó: ${enemyCard.nombre}`);
+                renderField();
+            }
+        }
 
-        window.onload = function() {
-            
-            startTurn();
-            
-            initializeDeckAndHand().then(() => {
-                addDragDropListeners(); 
-            });
+        // ========================================
+        // INICIALIZACIÓN
+        // ========================================
+        window.onload = () => {
+            loadCards();
+            startTimer();
+            addLog('=== Bienvenido a Las Luchas de las Tribus ===');
+            addLog('Tienes 2 minutos - Modo Noche se activa al minuto 1');
+            addLog('Arrastra tus cartas luchadores al campo');
         };
     </script>
 </body>

@@ -1,0 +1,756 @@
+{
+  "mazo_tribu_orah": [
+    {
+      "id": "orah_001",
+      "nombre": "Chamán",
+      "tipo": "Luchador",
+      "ataque": 7,
+      "vida": 9,
+      "velocidad": 6,
+      "descripcion": "Un brujo peligroso, que si lo haces enojar, te cae una maldición que restará tu vida.",
+      "imagen": "chaman.png"
+    },
+    {
+      "id": "orah_002",
+      "nombre": "Mamut enojado",
+      "tipo": "Luchador",
+      "ataque": 10,
+      "vida": 8,
+      "velocidad": 2,
+      "descripcion": "Al ser un mamut enojado sus estadísticas en ataque es elevada pero eso lo hace torpe",
+      "imagen": "mamut_enojado.png"
+    },
+    {
+      "id": "orah_003",
+      "nombre": "Cavernícola asustado",
+      "tipo": "Luchador",
+      "ataque": 4,
+      "vida": 5,
+      "velocidad": 2,
+      "descripcion": "Es un cavernícola inexperto, por ende tiene las estadísticas balanceadas",
+      "imagen": "cavernicola_asustado.png"
+    },
+    {
+      "id": "orah_004",
+      "nombre": "Hombre del hacha",
+      "tipo": "Luchador",
+      "ataque": 8,
+      "vida": 5,
+      "velocidad": 6,
+      "descripcion": "Tengo un hacha y no temo usarla. Precisión y un golpe que te puede dejar en estado crítico",
+      "imagen": "hombre_hacha.png"
+    },
+    {
+      "id": "orah_005",
+      "nombre": "Quetzal",
+      "tipo": "Luchador",
+      "ataque": 7,
+      "vida": 3,
+      "velocidad": 3,
+      "descripcion": "Es un ave mitológica majestuosa. A pesar de su divinidad no se sabe si es agresiva o pacifista",
+      "imagen": "quetzal.png"
+    },
+    {
+      "id": "orah_006",
+      "nombre": "Tigre dientes de sable",
+      "tipo": "Luchador",
+      "ataque": 9,
+      "vida": 6,
+      "velocidad": 8,
+      "descripcion": "Un poderoso y aterrador ser que definitivamente no es amigable. Es capaz de matarte en dos segundos",
+      "imagen": "tigre_dientes_sable.png"
+    },
+    {
+      "id": "orah_007",
+      "nombre": "Mamá luchona",
+      "tipo": "Luchador",
+      "ataque": 5,
+      "vida": 4,
+      "velocidad": 3,
+      "descripcion": "TOCAR A MIS CACHORROS ES DESPERTAR A LA BESTIA. Furia protectora y una defensa garantizada",
+      "imagen": "mama_luchona.png"
+    },
+    {
+      "id": "orah_008",
+      "nombre": "Hombre de las nieves",
+      "tipo": "Luchador",
+      "ataque": 8,
+      "vida": 6,
+      "velocidad": 3,
+      "descripcion": "Mis enemigos no conocen el significado del reposo. Táctica helada y un golpe inmovilizador",
+      "imagen": "hombre_nieves.png"
+    },
+    {
+      "id": "orah_009",
+      "nombre": "Cuidadora de animales",
+      "tipo": "Luchador",
+      "ataque": 1,
+      "vida": 4,
+      "velocidad": 2,
+      "descripcion": "Una mujer con un vínculo especial con los animales. Puede hasta hablarles y controlarlos",
+      "imagen": "cuidadora_animales.png"
+    },
+    {
+      "id": "orah_010",
+      "nombre": "Hechicera",
+      "tipo": "Luchador",
+      "ataque": 4,
+      "vida": 5,
+      "velocidad": 6,
+      "descripcion": "Una poderosa bruja que invoca de todos los hechizos. Invoca almas sedientas de venganza",
+      "imagen": "hechicera.png"
+    },
+    {
+      "id": "orah_011",
+      "nombre": "Aventurero",
+      "tipo": "Luchador",
+      "ataque": 4,
+      "vida": 9,
+      "velocidad": 6,
+      "descripcion": "Casi nunca está en su aldea porque se la pasa explorando. Tiene mucha experiencia en supervivencia",
+      "imagen": "aventurero.png"
+    },
+    {
+      "id": "orah_012",
+      "nombre": "Dios del Sol",
+      "tipo": "Luchador",
+      "ataque": 10,
+      "vida": 10,
+      "velocidad": 8,
+      "descripcion": "Un ente divino que representa al sol. Fuerte, imponente y no dudará en carbonizarte",
+      "imagen": "dios_sol.png"
+    },
+    {
+      "id": "orah_013",
+      "nombre": "La arquera",
+      "tipo": "Luchador",
+      "ataque": 5,
+      "vida": 4,
+      "velocidad": 5,
+      "descripcion": "Una mujer fuerte que decidió no ajustarse al estándar. Está decidida a triunfar",
+      "imagen": "arquera.png"
+    },
+    {
+      "id": "orah_014",
+      "nombre": "Homosapiens",
+      "tipo": "Luchador",
+      "ataque": 5,
+      "vida": 3,
+      "velocidad": 5,
+      "descripcion": "O es muy tonto como para un humano, o muy listo para un mono. 50% de chances",
+      "imagen": "homosapiens.png"
+    },
+    {
+      "id": "orah_015",
+      "nombre": "Arquero sabio",
+      "tipo": "Luchador",
+      "ataque": 7,
+      "vida": 4,
+      "velocidad": 3,
+      "descripcion": "Lo que tiene de anciano, lo tiene de años de experiencia. Más experimentado pero lento",
+      "imagen": "arquero_sabio.png"
+    },
+    {
+      "id": "orah_016",
+      "nombre": "Jefe de la tribu",
+      "tipo": "Luchador",
+      "ataque": 8,
+      "vida": 6,
+      "velocidad": 5,
+      "descripcion": "Un hombre justo y ético que guiará a su tribu hacia el camino de la victoria, ocurra lo que ocurra",
+      "imagen": "jefe_tribu.png"
+    },
+    {
+      "id": "orah_017",
+      "nombre": "Viejito perdido",
+      "tipo": "Luchador",
+      "ataque": 1,
+      "vida": 1,
+      "velocidad": 1,
+      "descripcion": "¿Dónde estoy? Literalmente no tiene ni la menor idea de dónde se ha metido",
+      "imagen": "viejito_perdido.png"
+    },
+    {
+      "id": "orah_018",
+      "nombre": "Hechicero ciego",
+      "tipo": "Luchador",
+      "ataque": 8,
+      "vida": 9,
+      "velocidad": 8,
+      "descripcion": "Si bien no puede ver en absoluto, sus sentidos son los más agudos y perfectos",
+      "imagen": "hechicero_ciego.png"
+    },
+    {
+      "id": "orah_019",
+      "nombre": "Guerrero infernal",
+      "tipo": "Luchador",
+      "ataque": 9,
+      "vida": 8,
+      "velocidad": 9,
+      "descripcion": "Nadie se le ha logrado acercar demasiado. Muchos lo llaman El dios de la guerra",
+      "imagen": "guerrero_infernal.png"
+    },
+    {
+      "id": "orah_020",
+      "nombre": "Cavernícola ladrón",
+      "tipo": "Luchador",
+      "ataque": 4,
+      "vida": 4,
+      "velocidad": 6,
+      "descripcion": "Sale todas las noches a ver a quién le puede sacar algo, porque ahora es adicto a robar",
+      "imagen": "cavernicola_ladron.png"
+    },
+    {
+      "id": "orah_021",
+      "nombre": "Lobo Feroz",
+      "tipo": "Luchador",
+      "ataque": 8,
+      "vida": 6,
+      "velocidad": 7,
+      "descripcion": "Realmente no es tan agresivo, pero solo es amigable con su amo. Si lastimas a su amo, estás muerto",
+      "imagen": "lobo_feroz.png"
+    },
+    {
+      "id": "orah_022",
+      "nombre": "Tlaloc",
+      "tipo": "Luchador",
+      "ataque": 9,
+      "vida": 8,
+      "velocidad": 9,
+      "descripcion": "Furia acuática y una descarga que arrasa el campo de batalla, dejando a todos en estado de shock",
+      "imagen": "tlaloc.png"
+    },
+    {
+      "id": "orah_023",
+      "nombre": "Guardian nocturno",
+      "tipo": "Luchador",
+      "ataque": 5,
+      "vida": 6,
+      "velocidad": 3,
+      "descripcion": "Sale por la noche a hacer vigilancia. Algunos rumorean que nunca duerme debido a alguna paranoia",
+      "imagen": "guardian_nocturno.png"
+    },
+    {
+      "id": "orah_024",
+      "nombre": "Guerrera del fuego",
+      "tipo": "Luchador",
+      "ataque": 7,
+      "vida": 4,
+      "velocidad": 3,
+      "descripcion": "Táctica de fuego y un golpe que puede dejar inmovilizado en el campo de batalla",
+      "imagen": "guerrera_fuego.png"
+    },
+    {
+      "id": "orah_025",
+      "nombre": "Quetzalcoatl",
+      "tipo": "Luchador",
+      "ataque": 9,
+      "vida": 8,
+      "velocidad": 9,
+      "descripcion": "Viento y sabiduría y una furia que desata una tormenta divina, dejando al enemigo vulnerable",
+      "imagen": "quetzalcoatl.png"
+    },
+    {
+      "id": "orah_c01",
+      "nombre": "Cántico de la Tierra",
+      "tipo": "Curación",
+      "curacion": 7,
+      "descripcion": "Un cántico de lo más antiguo, pero es muy efectivo y es hermoso de oír",
+      "imagen": "cantico_tierra.png"
+    },
+    {
+      "id": "orah_c02",
+      "nombre": "Infusión de Raíces",
+      "tipo": "Curación",
+      "curacion": 3,
+      "descripcion": "Si bien no sabe como la cosa más sabrosa del mundo, cura mejor que la terapia",
+      "imagen": "infusion_raices.png"
+    },
+    {
+      "id": "orah_c03",
+      "nombre": "Bendición del Chamán",
+      "tipo": "Curación",
+      "curacion": 8,
+      "descripcion": "Tu amigo, el chamán de la montaña de nombre indefinido, te protege y bendice de los males",
+      "imagen": "bendicion_chaman.png"
+    },
+    {
+      "id": "orah_c04",
+      "nombre": "Luz de las Estrellas",
+      "tipo": "Curación",
+      "curacion": 9,
+      "descripcion": "La celestial luz de las estrellas es a veces la única medicina que uno necesita",
+      "imagen": "luz_estrellas.png"
+    },
+    {
+      "id": "orah_c05",
+      "nombre": "Té de la Montaña",
+      "tipo": "Curación",
+      "curacion": 4,
+      "descripcion": "Una infusión caliente de hierbas de las montañas que restaura energía",
+      "imagen": "te_montana.png"
+    },
+    {
+      "id": "orah_c06",
+      "nombre": "Sanación del Río",
+      "tipo": "Curación",
+      "curacion": 6,
+      "descripcion": "Un río místico que tiene el poder de sanación inmediata",
+      "imagen": "sanacion_rio.png"
+    },
+    {
+      "id": "orah_c07",
+      "nombre": "Rito de la Aurora",
+      "tipo": "Curación",
+      "curacion": 7,
+      "descripcion": "El poder del amanecer restaura las fuerzas de los guerreros",
+      "imagen": "rito_aurora.png"
+    },
+    {
+      "id": "orah_c08",
+      "nombre": "Fuego Curativo",
+      "tipo": "Curación",
+      "curacion": 5,
+      "descripcion": "El espíritu del fuego te deja sanado en lo que tú pestañeas, un milagro",
+      "imagen": "fuego_curativo.png"
+    },
+    {
+      "id": "orah_c09",
+      "nombre": "Espíritu de la Noche",
+      "tipo": "Curación",
+      "curacion": 4,
+      "descripcion": "Un espíritu que te cuida de las pesadillas y los males de la noche",
+      "imagen": "espiritu_noche.png"
+    },
+    {
+      "id": "orah_c10",
+      "nombre": "Manantial Sagrado",
+      "tipo": "Curación",
+      "curacion": 10,
+      "descripcion": "Un lugar medicinal para quienes lo encuentran, desde hombres a animales",
+      "imagen": "manantial_sagrado.png"
+    },
+    {
+      "id": "orah_c11",
+      "nombre": "Brisa de la Sabiduría",
+      "tipo": "Curación",
+      "curacion": 6,
+      "descripcion": "No solo te sana y cuida, sino que también te da sabiduría",
+      "imagen": "brisa_sabiduria.png"
+    },
+    {
+      "id": "orah_c12",
+      "nombre": "Fruta sanadora",
+      "tipo": "Curación",
+      "curacion": 7,
+      "descripcion": "Estos manjares tropicales te ayudarán a renovar energía y vida",
+      "imagen": "fruta_sanadora.png"
+    },
+    {
+      "id": "orah_c13",
+      "nombre": "Guiso Curador",
+      "tipo": "Curación",
+      "curacion": 5,
+      "descripcion": "Delicioso y curativo, tu madre no mentía cuando te decía que comer tus verduras te haría más fuerte",
+      "imagen": "guiso_curador.png"
+    },
+    {
+      "id": "orah_c14",
+      "nombre": "Pan Mágico",
+      "tipo": "Curación",
+      "curacion": 5,
+      "descripcion": "Los mejores carbohidratos se hornean en horno de barro con un ingrediente secreto: Magia curadora",
+      "imagen": "pan_magico.png"
+    },
+    {
+      "id": "orah_c15",
+      "nombre": "Curación",
+      "tipo": "Curación",
+      "curacion": 7,
+      "descripcion": "El veneno no es más que un mal sueño. Elixir concentrado que anula todo daño continuo",
+      "imagen": "curacion.png"
+    }
+  ],
+  "mazo_tribu_nora": [
+    {
+      "id": "nora_001",
+      "nombre": "Chamán",
+      "tipo": "Luchador",
+      "ataque": 7,
+      "vida": 9,
+      "velocidad": 6,
+      "descripcion": "Un brujo peligroso, que si lo haces enojar, te cae una maldición que restará tu vida.",
+      "imagen": "chaman.png"
+    },
+    {
+      "id": "nora_002",
+      "nombre": "Mamut enojado",
+      "tipo": "Luchador",
+      "ataque": 10,
+      "vida": 8,
+      "velocidad": 2,
+      "descripcion": "Al ser un mamut enojado sus estadísticas en ataque es elevada pero eso lo hace torpe",
+      "imagen": "mamut_enojado.png"
+    },
+    {
+      "id": "nora_003",
+      "nombre": "Cavernícola asustado",
+      "tipo": "Luchador",
+      "ataque": 4,
+      "vida": 5,
+      "velocidad": 2,
+      "descripcion": "Es un cavernícola inexperto, por ende tiene las estadísticas balanceadas",
+      "imagen": "cavernicola_asustado.png"
+    },
+    {
+      "id": "nora_004",
+      "nombre": "Hombre del hacha",
+      "tipo": "Luchador",
+      "ataque": 8,
+      "vida": 5,
+      "velocidad": 6,
+      "descripcion": "Tengo un hacha y no temo usarla. Precisión y un golpe que te puede dejar en estado crítico",
+      "imagen": "hombre_hacha.png"
+    },
+    {
+      "id": "nora_005",
+      "nombre": "Quetzal",
+      "tipo": "Luchador",
+      "ataque": 7,
+      "vida": 3,
+      "velocidad": 3,
+      "descripcion": "Es un ave mitológica majestuosa. A pesar de su divinidad no se sabe si es agresiva o pacifista",
+      "imagen": "quetzal.png"
+    },
+    {
+      "id": "nora_006",
+      "nombre": "Tigre dientes de sable",
+      "tipo": "Luchador",
+      "ataque": 9,
+      "vida": 6,
+      "velocidad": 8,
+      "descripcion": "Un poderoso y aterrador ser que definitivamente no es amigable. Es capaz de matarte en dos segundos",
+      "imagen": "tigre_dientes_sable.png"
+    },
+    {
+      "id": "nora_007",
+      "nombre": "Mamá luchona",
+      "tipo": "Luchador",
+      "ataque": 5,
+      "vida": 4,
+      "velocidad": 3,
+      "descripcion": "TOCAR A MIS CACHORROS ES DESPERTAR A LA BESTIA. Furia protectora y una defensa garantizada",
+      "imagen": "mama_luchona.png"
+    },
+    {
+      "id": "nora_008",
+      "nombre": "Hombre de las nieves",
+      "tipo": "Luchador",
+      "ataque": 8,
+      "vida": 6,
+      "velocidad": 3,
+      "descripcion": "Mis enemigos no conocen el significado del reposo. Táctica helada y un golpe inmovilizador",
+      "imagen": "hombre_nieves.png"
+    },
+    {
+      "id": "nora_009",
+      "nombre": "Cuidadora de animales",
+      "tipo": "Luchador",
+      "ataque": 1,
+      "vida": 4,
+      "velocidad": 2,
+      "descripcion": "Una mujer con un vínculo especial con los animales. Puede hasta hablarles y controlarlos",
+      "imagen": "cuidadora_animales.png"
+    },
+    {
+      "id": "nora_010",
+      "nombre": "Hechicera",
+      "tipo": "Luchador",
+      "ataque": 4,
+      "vida": 5,
+      "velocidad": 6,
+      "descripcion": "Una poderosa bruja que invoca de todos los hechizos. Invoca almas sedientas de venganza",
+      "imagen": "hechicera.png"
+    },
+    {
+      "id": "nora_011",
+      "nombre": "Aventurero",
+      "tipo": "Luchador",
+      "ataque": 4,
+      "vida": 9,
+      "velocidad": 6,
+      "descripcion": "Casi nunca está en su aldea porque se la pasa explorando. Tiene mucha experiencia en supervivencia",
+      "imagen": "aventurero.png"
+    },
+    {
+      "id": "nora_012",
+      "nombre": "Dios del Sol",
+      "tipo": "Luchador",
+      "ataque": 10,
+      "vida": 10,
+      "velocidad": 8,
+      "descripcion": "Un ente divino que representa al sol. Fuerte, imponente y no dudará en carbonizarte",
+      "imagen": "dios_sol.png"
+    },
+    {
+      "id": "nora_013",
+      "nombre": "La arquera",
+      "tipo": "Luchador",
+      "ataque": 5,
+      "vida": 4,
+      "velocidad": 5,
+      "descripcion": "Una mujer fuerte que decidió no ajustarse al estándar. Está decidida a triunfar",
+      "imagen": "arquera.png"
+    },
+    {
+      "id": "nora_014",
+      "nombre": "Homosapiens",
+      "tipo": "Luchador",
+      "ataque": 5,
+      "vida": 3,
+      "velocidad": 5,
+      "descripcion": "O es muy tonto como para un humano, o muy listo para un mono. 50% de chances",
+      "imagen": "homosapiens.png"
+    },
+    {
+      "id": "nora_015",
+      "nombre": "Arquero sabio",
+      "tipo": "Luchador",
+      "ataque": 7,
+      "vida": 4,
+      "velocidad": 3,
+      "descripcion": "Lo que tiene de anciano, lo tiene de años de experiencia. Más experimentado pero lento",
+      "imagen": "arquero_sabio.png"
+    },
+    {
+      "id": "nora_016",
+      "nombre": "Jefe de la tribu",
+      "tipo": "Luchador",
+      "ataque": 8,
+      "vida": 6,
+      "velocidad": 5,
+      "descripcion": "Un hombre justo y ético que guiará a su tribu hacia el camino de la victoria, ocurra lo que ocurra",
+      "imagen": "jefe_tribu.png"
+    },
+    {
+      "id": "nora_017",
+      "nombre": "Viejito perdido",
+      "tipo": "Luchador",
+      "ataque": 1,
+      "vida": 1,
+      "velocidad": 1,
+      "descripcion": "¿Dónde estoy? Literalmente no tiene ni la menor idea de dónde se ha metido",
+      "imagen": "viejito_perdido.png"
+    },
+    {
+      "id": "nora_018",
+      "nombre": "Hechicero ciego",
+      "tipo": "Luchador",
+      "ataque": 8,
+      "vida": 9,
+      "velocidad": 8,
+      "descripcion": "Si bien no puede ver en absoluto, sus sentidos son los más agudos y perfectos",
+      "imagen": "hechicero_ciego.png"
+    },
+    {
+      "id": "nora_019",
+      "nombre": "Guerrero infernal",
+      "tipo": "Luchador",
+      "ataque": 9,
+      "vida": 8,
+      "velocidad": 9,
+      "descripcion": "Nadie se le ha logrado acercar demasiado. Muchos lo llaman El dios de la guerra",
+      "imagen": "guerrero_infernal.png"
+    },
+    {
+      "id": "nora_020",
+      "nombre": "Cavernícola ladrón",
+      "tipo": "Luchador",
+      "ataque": 4,
+      "vida": 4,
+      "velocidad": 6,
+      "descripcion": "Sale todas las noches a ver a quién le puede sacar algo, porque ahora es adicto a robar",
+      "imagen": "cavernicola_ladron.png"
+    },
+    {
+      "id": "nora_021",
+      "nombre": "Lobo Feroz",
+      "tipo": "Luchador",
+      "ataque": 8,
+      "vida": 6,
+      "velocidad": 7,
+      "descripcion": "Realmente no es tan agresivo, pero solo es amigable con su amo. Si lastimas a su amo, estás muerto",
+      "imagen": "lobo_feroz.png"
+    },
+    {
+      "id": "nora_022",
+      "nombre": "Tlaloc",
+      "tipo": "Luchador",
+      "ataque": 9,
+      "vida": 8,
+      "velocidad": 9,
+      "descripcion": "Furia acuática y una descarga que arrasa el campo de batalla, dejando a todos en estado de shock",
+      "imagen": "tlaloc.png"
+    },
+    {
+      "id": "nora_023",
+      "nombre": "Guardian nocturno",
+      "tipo": "Luchador",
+      "ataque": 5,
+      "vida": 6,
+      "velocidad": 3,
+      "descripcion": "Sale por la noche a hacer vigilancia. Algunos rumorean que nunca duerme debido a alguna paranoia",
+      "imagen": "guardian_nocturno.png"
+    },
+    {
+      "id": "nora_024",
+      "nombre": "Guerrera del fuego",
+      "tipo": "Luchador",
+      "ataque": 7,
+      "vida": 4,
+      "velocidad": 3,
+      "descripcion": "Táctica de fuego y un golpe que puede dejar inmovilizado en el campo de batalla",
+      "imagen": "guerrera_fuego.png"
+    },
+    {
+      "id": "nora_025",
+      "nombre": "Quetzalcoatl",
+      "tipo": "Luchador",
+      "ataque": 9,
+      "vida": 8,
+      "velocidad": 9,
+      "descripcion": "Viento y sabiduría y una furia que desata una tormenta divina, dejando al enemigo vulnerable",
+      "imagen": "quetzalcoatl.png"
+    },
+    {
+      "id": "nora_026",
+      "nombre": "Campesino",
+      "tipo": "Luchador",
+      "ataque": 2,
+      "vida": 4,
+      "velocidad": 4,
+      "descripcion": "Un personaje medio desubicado, ya que es un ser pacífico que no le importa nada más que sus cosechas",
+      "imagen": "campesino.png"
+    },
+    {
+      "id": "nora_c01",
+      "nombre": "Cántico de la Tierra",
+      "tipo": "Curación",
+      "curacion": 7,
+      "descripcion": "Un cántico de lo más antiguo, pero es muy efectivo y es hermoso de oír",
+      "imagen": "cantico_tierra.png"
+    },
+    {
+      "id": "nora_c02",
+      "nombre": "Infusión de Raíces",
+      "tipo": "Curación",
+      "curacion": 3,
+      "descripcion": "Si bien no sabe como la cosa más sabrosa del mundo, cura mejor que la terapia",
+      "imagen": "infusion_raices.png"
+    },
+    {
+      "id": "nora_c03",
+      "nombre": "Bendición del Chamán",
+      "tipo": "Curación",
+      "curacion": 8,
+      "descripcion": "Tu amigo, el chamán de la montaña de nombre indefinido, te protege y bendice de los males",
+      "imagen": "bendicion_chaman.png"
+    },
+    {
+      "id": "nora_c04",
+      "nombre": "Luz de las Estrellas",
+      "tipo": "Curación",
+      "curacion": 9,
+      "descripcion": "La celestial luz de las estrellas es a veces la única medicina que uno necesita",
+      "imagen": "luz_estrellas.png"
+    },
+    {
+      "id": "nora_c05",
+      "nombre": "Té de la Montaña",
+      "tipo": "Curación",
+      "curacion": 4,
+      "descripcion": "Una infusión caliente de hierbas de las montañas que restaura energía",
+      "imagen": "te_montana.png"
+    },
+    {
+      "id": "nora_c06",
+      "nombre": "Sanación del Río",
+      "tipo": "Curación",
+      "curacion": 6,
+      "descripcion": "Un río místico que tiene el poder de sanación inmediata",
+      "imagen": "sanacion_rio.png"
+    },
+    {
+      "id": "nora_c07",
+      "nombre": "Rito de la Aurora",
+      "tipo": "Curación",
+      "curacion": 7,
+      "descripcion": "El poder del amanecer restaura las fuerzas de los guerreros",
+      "imagen": "rito_aurora.png"
+    },
+    {
+      "id": "nora_c08",
+      "nombre": "Fuego Curativo",
+      "tipo": "Curación",
+      "curacion": 5,
+      "descripcion": "El espíritu del fuego te deja sanado en lo que tú pestañeas, un milagro",
+      "imagen": "fuego_curativo.png"
+    },
+    {
+      "id": "nora_c09",
+      "nombre": "Espíritu de la Noche",
+      "tipo": "Curación",
+      "curacion": 4,
+      "descripcion": "Un espíritu que te cuida de las pesadillas y los males de la noche",
+      "imagen": "espiritu_noche.png"
+    },
+    {
+      "id": "nora_c10",
+      "nombre": "Manantial Sagrado",
+      "tipo": "Curación",
+      "curacion": 10,
+      "descripcion": "Un lugar medicinal para quienes lo encuentran, desde hombres a animales",
+      "imagen": "manantial_sagrado.png"
+    },
+    {
+      "id": "nora_c11",
+      "nombre": "Brisa de la Sabiduría",
+      "tipo": "Curación",
+      "curacion": 6,
+      "descripcion": "No solo te sana y cuida, sino que también te da sabiduría",
+      "imagen": "brisa_sabiduria.png"
+    },
+    {
+      "id": "nora_c12",
+      "nombre": "Fruta sanadora",
+      "tipo": "Curación",
+      "curacion": 7,
+      "descripcion": "Estos manjares tropicales te ayudarán a renovar energía y vida",
+      "imagen": "fruta_sanadora.png"
+    },
+    {
+      "id": "nora_c13",
+      "nombre": "Guiso Curador",
+      "tipo": "Curación",
+      "curacion": 5,
+      "descripcion": "Delicioso y curativo, tu madre no mentía cuando te decía que comer tus verduras te haría más fuerte",
+      "imagen": "guiso_curador.png"
+    },
+    {
+      "id": "nora_c14",
+      "nombre": "Pan Mágico",
+      "tipo": "Curación",
+      "curacion": 5,
+      "descripcion": "Los mejores carbohidratos se hornean en horno de barro con un ingrediente secreto: Magia curadora",
+      "imagen": "pan_magico.png"
+    },
+    {
+      "id": "nora_c15",
+      "nombre": "Curación",
+      "tipo": "Curación",
+      "curacion": 7,
+      "descripcion": "El veneno no es más que un mal sueño. Elixir concentrado que anula todo daño continuo",
+      "imagen": "curacion.png"
+    }
+  ]
+}
