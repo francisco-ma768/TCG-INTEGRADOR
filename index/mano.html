@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selección de Mano - Verso y Venganza</title>
+    <title>Selección de Mano - Las Luchas de las Tribus</title>
     
     <style>
-        /* ---------------------------------------------------- */
-        /* ESTILOS PRINCIPALES DE LA MANO (SELECCIÓN) */
-        /* ---------------------------------------------------- */
         body {
-            /* Usamos la imagen de la jungla como fondo principal */
             background-image: url('assets/jungla.png'); 
             background-size: cover; 
             background-position: center; 
@@ -33,13 +29,13 @@
             padding: 40px 20px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
-            border: 4px solid #ffcc00; /* Borde dorado/amarillo consistente */
+            border: 4px solid #ffcc00;
             text-align: center;
         }
 
         h1 {
             font-size: 2.5em;
-            color: #e6675e; /* Rojo de acción */
+            color: #e6675e;
             margin-bottom: 10px;
             text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
         }
@@ -49,26 +45,26 @@
             margin-bottom: 30px;
             color: #a89f8d;
         }
-        
-        /* ---------------------------------------------------- */
-        /* ZONA DE MAZO Y MANO (Diseño según tu imagen) */
-        /* ---------------------------------------------------- */
 
-        .deck-and-hand {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 50px;
+        .loading {
+            font-size: 1.5em;
+            color: #ffcc00;
+            margin: 30px 0;
         }
-        
+
         /* Mazo de Cartas (Esquina superior izquierda) */
         .deck-area {
             position: absolute;
             top: 40px;
             left: 20px;
-            /* Usaremos slots apilados para simular el mazo de tu imagen */
         }
         
+        .deck-stack {
+            position: relative;
+            width: 100px;
+            height: 140px;
+        }
+
         .deck-stack .card-visual {
             position: absolute;
             top: 0;
@@ -77,52 +73,100 @@
             border-radius: 10px;
             width: 100px; 
             height: 140px;
-            background-color: #5d0f19; /* Color marrón oscuro de la carta */
+            background-color: #5d0f19;
         }
 
         .deck-stack .card-visual:nth-child(1) { transform: translate(6px, 6px); }
         .deck-stack .card-visual:nth-child(2) { transform: translate(3px, 3px); }
         .deck-stack .card-visual:nth-child(3) { transform: translate(0, 0); }
 
-        /* Área de las 5 Cartas de la Mano (Fila central) */
+        /* Área de las 5 Cartas de la Mano */
         .hand-selection-area {
             display: flex;
             justify-content: center;
             gap: 20px;
             padding: 20px;
-            margin-top: 100px; /* Separación visual del mazo */
+            margin-top: 20px;
+            flex-wrap: wrap;
         }
 
-        /* Diseño de la Carta Individual (Simulando el marco rústico de tu imagen) */
+        /* Carta Individual */
         .card-slot {
-            width: 180px; 
-            height: 250px;
-            
-            /* **Simulación del marco rústico** */
-            border: 10px solid transparent; 
-            border-image: url('assets/marco_rustico.png') 30 round; /* **NOTA: Reemplaza con tu imagen de marco si tienes una** */
-            
-            background-color: #5d0f19; /* Marrón oscuro */
-            border-radius: 15px;
-            text-align: center;
-            line-height: 250px;
+            width: 160px; 
+            height: 230px;
+            background: linear-gradient(135deg, #5d0f19 0%, #3a0a10 100%);
+            border: 5px solid #f5e6b9;
+            border-radius: 12px;
+            padding: 10px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            color: #f5e6b9;
+            transition: transform 0.3s, box-shadow 0.3s;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
-            font-size: 1.2em;
-            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
         }
         
         .card-slot:hover {
-            transform: scale(1.03); 
-            box-shadow: 0 0 20px #ffcc00; /* Resaltar con sombra dorada */
+            transform: scale(1.08) translateY(-5px); 
+            box-shadow: 0 0 25px #ffcc00;
         }
-        
-        /* ---------------------------------------------------- */
-        /* BOTONES DE PIE DE PÁGINA */
-        /* ---------------------------------------------------- */
 
+        .card-name {
+            font-size: 1em;
+            font-weight: bold;
+            color: #ffcc00;
+            text-align: center;
+            margin-bottom: 8px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-type {
+            text-align: center;
+            font-size: 0.85em;
+            color: #ccc;
+            margin-bottom: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .card-description {
+            font-size: 0.7em;
+            text-align: center;
+            color: #ddd;
+            margin: 5px 0;
+            line-height: 1.2;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: auto;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .stat {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .stat-atk { color: #ff4444; }
+        .stat-vida { color: #44ff44; }
+        .stat-vel { color: #4444ff; }
+        .stat-cur { color: #ffaa00; }
+
+        /* Botones */
         .button-footer {
             display: flex;
             justify-content: space-between;
@@ -134,7 +178,7 @@
         .start-game-button {
             padding: 18px 45px;
             font-size: 1.8em;
-            background-color: #4CAF50; /* Verde para Jugar */
+            background-color: #4CAF50;
             color: white;
             border: 4px solid #ffcc00; 
             border-radius: 10px;
@@ -142,11 +186,17 @@
             font-weight: bold;
             box-shadow: 0 0 15px rgba(76, 175, 80, 0.7);
             transition: background-color 0.2s;
-            margin-left: auto; /* Mueve el botón Jugar a la derecha */
+            margin-left: auto;
         }
 
         .start-game-button:hover {
             background-color: #45a049;
+        }
+
+        .start-game-button:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+            opacity: 0.5;
         }
         
         .back-button {
@@ -156,7 +206,11 @@
             border: 2px solid #888; 
             border-radius: 5px; 
             cursor: pointer;
-            margin-right: auto; /* Mantiene el botón Volver a la izquierda */
+            margin-right: auto;
+        }
+
+        .back-button:hover {
+            background-color: #777;
         }
     </style>
 </head>
@@ -172,26 +226,122 @@
             </div>
         </div>
 
-        <h1>Prepara tu Mano para el Combate</h1>
-        <p>Selecciona 5 cartas para formar tu mano inicial antes de empezar la partida.</p>
+        <h1>Tu Mano Inicial</h1>
+        <p id="info-text">Cargando tus cartas...</p>
         
-        <div class="hand-selection-area">
-            <div class="card-slot">Carta 1</div>
-            <div class="card-slot">Carta 2</div>
-            <div class="card-slot">Carta 3</div>
-            <div class="card-slot">Carta 4</div>
-            <div class="card-slot">Carta 5</div>
+        <div class="loading" id="loading">⏳ Preparando el mazo...</div>
+        
+        <div class="hand-selection-area" id="hand-area">
+            <!-- Las cartas se cargarán aquí dinámicamente -->
         </div>
         
         <div class="button-footer">
-             <button class="back-button" onclick="window.location.href='index.html';">Volver al Menú</button>
-
-            <button class="start-game-button" onclick="window.location.href='tablero.html';">
+            <button class="back-button" onclick="window.location.href='index.html';">Volver al Menú</button>
+            <button class="start-game-button" id="play-btn" onclick="goToGame()" disabled>
                 JUGAR ¡Al Tablero! ➡️
             </button>
         </div>
 
     </div>
+
+    <script>
+        let selectedCards = [];
+
+        // Cargar cartas al iniciar
+        async function loadCards() {
+            try {
+                const response = await fetch('data/cartas.json');
+                const data = await response.json();
+                
+                // Seleccionar cartas del mazo Orah
+                const orahCards = data.mazo_tribu_orah;
+                
+                // Mezclar el mazo
+                const shuffled = orahCards.sort(() => 0.5 - Math.random());
+                
+                // Seleccionar 3 luchadores y 2 curaciones
+                const luchadores = shuffled.filter(c => c.tipo === 'Luchador').slice(0, 3);
+                const curaciones = shuffled.filter(c => c.tipo === 'Curación').slice(0, 2);
+                
+                selectedCards = [...luchadores, ...curaciones];
+                
+                // Ocultar loading y mostrar cartas
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('info-text').textContent = 'Estas son tus 5 cartas para la batalla (3 Luchadores + 2 Curaciones)';
+                
+                displayCards();
+                
+            } catch (error) {
+                console.error('Error al cargar cartas:', error);
+                document.getElementById('loading').textContent = '❌ Error al cargar las cartas. Verifica que existe data/cartas.json';
+            }
+        }
+
+        function displayCards() {
+            const handArea = document.getElementById('hand-area');
+            handArea.innerHTML = '';
+            
+            selectedCards.forEach((card, index) => {
+                const cardElement = createCardElement(card, index);
+                handArea.appendChild(cardElement);
+            });
+            
+            // Habilitar botón de jugar
+            document.getElementById('play-btn').disabled = false;
+        }
+
+        function createCardElement(card, index) {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card-slot';
+            
+            // Crear contenido de la carta
+            let statsHTML = '';
+            if (card.tipo === 'Luchador') {
+                statsHTML = `
+                    <div class="card-stats">
+                        <span class="stat stat-atk">⚔ ${card.ataque}</span>
+                        <span class="stat stat-vida">❤ ${card.vida}</span>
+                        <span class="stat stat-vel">⚡ ${card.velocidad}</span>
+                    </div>
+                `;
+            } else {
+                statsHTML = `
+                    <div class="card-stats">
+                        <span class="stat stat-cur">✚ Cura ${card.curacion}</span>
+                    </div>
+                `;
+            }
+            
+            // Descripción truncada
+            const shortDesc = card.descripcion.length > 60 
+                ? card.descripcion.substring(0, 60) + '...' 
+                : card.descripcion;
+            
+            cardDiv.innerHTML = `
+                <div class="card-name">${card.nombre}</div>
+                <div class="card-type">${card.tipo}</div>
+                <div class="card-description">${shortDesc}</div>
+                ${statsHTML}
+            `;
+            
+            return cardDiv;
+        }
+
+        function goToGame() {
+            // Guardar las cartas seleccionadas en sessionStorage (temporal)
+            // Nota: Usamos sessionStorage SOLO para pasar datos entre páginas
+            // No se usa para guardar estado del juego
+            sessionStorage.setItem('selectedCards', JSON.stringify(selectedCards));
+            
+            // Ir al tablero
+            window.location.href = 'tablero.html';
+        }
+
+        // Inicializar al cargar la página
+        window.onload = () => {
+            loadCards();
+        };
+    </script>
 
 </body>
 </html>

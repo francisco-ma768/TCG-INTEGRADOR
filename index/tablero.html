@@ -380,18 +380,26 @@
         // ========================================
         async function loadCards() {
             try {
-                const response = await fetch('data/cartas.json');
-                const data = await response.json();
+                // Intentar cargar cartas desde sessionStorage (viene de mano.html)
+                const savedCards = sessionStorage.getItem('selectedCards');
                 
-                // Seleccionar 5 cartas aleatorias del mazo Orah
-                const orahCards = data.mazo_tribu_orah;
-                const shuffled = orahCards.sort(() => 0.5 - Math.random());
-                
-                // Tomar 3 luchadores y 2 curaciones
-                const luchadores = shuffled.filter(c => c.tipo === 'Luchador').slice(0, 3);
-                const curaciones = shuffled.filter(c => c.tipo === 'Curación').slice(0, 2);
-                
-                deck = [...luchadores, ...curaciones];
+                if (savedCards) {
+                    deck = JSON.parse(savedCards);
+                    addLog('Cartas cargadas desde tu selección');
+                } else {
+                    // Si no hay cartas guardadas, cargar aleatorias
+                    const response = await fetch('data/cartas.json');
+                    const data = await response.json();
+                    
+                    const orahCards = data.mazo_tribu_orah;
+                    const shuffled = orahCards.sort(() => 0.5 - Math.random());
+                    
+                    const luchadores = shuffled.filter(c => c.tipo === 'Luchador').slice(0, 3);
+                    const curaciones = shuffled.filter(c => c.tipo === 'Curación').slice(0, 2);
+                    
+                    deck = [...luchadores, ...curaciones];
+                    addLog('Cartas aleatorias cargadas');
+                }
                 
                 addLog('Juego iniciado - 5 cartas en mano');
                 updateDeckCount();
