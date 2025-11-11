@@ -30,6 +30,7 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
+            gap: 5px;
         }
 
         /* Header con información */
@@ -51,8 +52,9 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
-            gap: 20px;
+            justify-content: center;
+            gap: 40px;
+            padding: 20px 0;
         }
 
         .battle-row {
@@ -183,9 +185,25 @@
         }
 
         /* Carta del oponente */
-        .card.opponent {
+        .card.healing-selected {
+            border-color: #00ff00;
+            box-shadow: 0 0 20px #00ff00;
+        }
+
+        .card.bot-card {
+            width: 100px;
+            height: 140px;
+            font-size: 0.75em;
             background: linear-gradient(135deg, #1a0a0a 0%, #0a0505 100%);
             border-color: #ff0000;
+        }
+
+        .card.bot-card .card-header {
+            font-size: 0.75em;
+        }
+
+        .card.bot-card .card-stats {
+            font-size: 0.7em;
         }
 
         /* Mensajes de log */
@@ -215,7 +233,7 @@
         <!-- Header -->
         <div class="game-header">
             <div class="player-info">
-                <strong>Tribu Orah (Tú)</strong>
+                <strong>Tribu Nora (Rival)</strong>
             </div>
             <div class="player-info" style="text-align: center;">
                 <div style="font-size: 1.5em; color: #ffcc00;" id="timer">2:00</div>
@@ -223,32 +241,33 @@
                 <div style="font-size: 0.9em;">Cartas en mazo: <span id="deck-count">0</span></div>
             </div>
             <div class="player-info">
-                <strong>Tribu Enemiga</strong>
+                <strong>Tribu Orah (Tú)</strong>
             </div>
+        </div>
+
+        <!-- Mano del BOT (arriba) -->
+        <div class="hand-zone" id="bot-hand" style="height: 120px; gap: 10px; margin-top: 10px; margin-bottom: 10px; opacity: 0.8;">
+            <!-- Las cartas del bot se mostrarán aquí -->
         </div>
 
         <!-- Zona de combate -->
         <div class="combat-zone">
-            <!-- Fila del oponente -->
+            <!-- Fila del oponente (ARRIBA) -->
             <div class="battle-row opponent-row" id="opponent-field">
                 <div class="combat-slot" data-slot="0"></div>
                 <div class="combat-slot" data-slot="1"></div>
                 <div class="combat-slot" data-slot="2"></div>
-                <div class="combat-slot" data-slot="3"></div>
-                <div class="combat-slot" data-slot="4"></div>
             </div>
 
-            <!-- Fila del jugador -->
+            <!-- Fila del jugador (ABAJO) -->
             <div class="battle-row player-row" id="player-field">
                 <div class="combat-slot" data-slot="0"></div>
                 <div class="combat-slot" data-slot="1"></div>
                 <div class="combat-slot" data-slot="2"></div>
-                <div class="combat-slot" data-slot="3"></div>
-                <div class="combat-slot" data-slot="4"></div>
             </div>
         </div>
 
-        <!-- Mano del jugador -->
+        <!-- Mano del jugador (abajo) -->
         <div class="hand-zone" id="player-hand">
             <!-- Las cartas se cargarán aquí -->
         </div>
@@ -271,15 +290,23 @@
         // ========================================
         let deck = [];
         let playerHand = [];
-        let playerField = [null, null, null, null, null];
-        let opponentField = [null, null, null, null, null];
+        let playerField = [null, null, null];
+        let opponentField = [null, null, null];
         let currentTurn = 1;
         let gameActive = true;
         
         // Variables del timer y modo noche
-        let timeRemaining = 120; // 2 minutos = 120 segundos
+        let timeRemaining = 120;
         let timerInterval = null;
         let nightModeActive = false;
+        
+        // BOT
+        let botDeck = [];
+        let botHand = [];
+        let botDifficulty = 'medium';
+        
+        // Sistema de curaciones
+        let selectedHealingCard = null;
 
         // ========================================
         // FUNCIONES DE LOG
@@ -349,8 +376,12 @@
             // Daño al campo del jugador
             playerField.forEach((card, index) => {
                 if (card && card.tipo === 'Luchador') {
+                    // TODAS las estadísticas bajan 1
                     card.vida -= 1;
-                    addLog(`${card.nombre} pierde 1 de vida (Modo Noche)`);
+                    card.ataque = Math.max(1, card.ataque - 1);
+                    card.velocidad = Math.max(1, card.velocidad - 1);
+                    
+                    addLog(`${card.nombre}: -1 Vida, -1 Ataque, -1 Velocidad (Modo Noche)`);
                     
                     if (card.vida <= 0) {
                         addLog(`💀 ${card.nombre} ha sido derrotado por la noche`);
@@ -362,8 +393,12 @@
             // Daño al campo del oponente
             opponentField.forEach((card, index) => {
                 if (card && card.tipo === 'Luchador') {
+                    // TODAS las estadísticas bajan 1
                     card.vida -= 1;
-                    addLog(`${card.nombre} (enemigo) pierde 1 de vida (Modo Noche)`);
+                    card.ataque = Math.max(1, card.ataque - 1);
+                    card.velocidad = Math.max(1, card.velocidad - 1);
+                    
+                    addLog(`${card.nombre} (enemigo): -1 en todas las stats (Modo Noche)`);
                     
                     if (card.vida <= 0) {
                         addLog(`💀 ${card.nombre} (enemigo) ha sido derrotado por la noche`);
@@ -380,6 +415,9 @@
         // ========================================
         async function loadCards() {
             try {
+                // Cargar dificultad del bot desde configuraciones
+                botDifficulty = localStorage.getItem('botDifficulty') || 'medium';
+                
                 // Intentar cargar cartas desde sessionStorage (viene de mano.html)
                 const savedCards = sessionStorage.getItem('selectedCards');
                 
@@ -401,13 +439,80 @@
                     addLog('Cartas aleatorias cargadas');
                 }
                 
-                addLog('Juego iniciado - 5 cartas en mano');
+                // Cargar mazo del BOT (Tribu Nora)
+                await loadBotDeck();
+                
+                addLog(`Juego iniciado - Dificultad del bot: ${botDifficulty.toUpperCase()}`);
                 updateDeckCount();
                 drawInitialHand();
             } catch (error) {
                 addLog('ERROR: No se pudo cargar cartas.json');
                 console.error(error);
             }
+        }
+
+        async function loadBotDeck() {
+            try {
+                const response = await fetch('data/cartas.json');
+                const data = await response.json();
+                
+                const noraCards = data.mazo_tribu_nora;
+                const shuffled = noraCards.sort(() => 0.5 - Math.random());
+                
+                // BOT tiene 3 luchadores + 2 curaciones (igual que el jugador)
+                const luchadores = shuffled.filter(c => c.tipo === 'Luchador').slice(0, 3);
+                const curaciones = shuffled.filter(c => c.tipo === 'Curación').slice(0, 2);
+                
+                botDeck = [...luchadores, ...curaciones];
+                
+                // Dar mano inicial al bot
+                botHand = [...botDeck];
+                
+                addLog(`Bot cargado: 3 luchadores + 2 curaciones`);
+                renderBotHand();
+            } catch (error) {
+                console.error('Error cargando mazo del bot:', error);
+            }
+        }
+
+        function renderBotHand() {
+            const botHandDiv = document.getElementById('bot-hand');
+            botHandDiv.innerHTML = '';
+            
+            botHand.forEach((card) => {
+                const cardElement = createBotCardElement(card);
+                botHandDiv.appendChild(cardElement);
+            });
+        }
+
+        function createBotCardElement(card) {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card bot-card';
+            
+            let statsHTML = '';
+            if (card.tipo === 'Luchador') {
+                statsHTML = `
+                    <div class="card-stats">
+                        <span class="stat stat-atk">⚔${card.ataque}</span>
+                        <span class="stat stat-vida">❤${card.vida}</span>
+                        <span class="stat stat-vel">⚡${card.velocidad}</span>
+                    </div>
+                `;
+            } else {
+                statsHTML = `
+                    <div class="card-stats">
+                        <span class="stat stat-cur">✚${card.curacion}</span>
+                    </div>
+                `;
+            }
+            
+            cardDiv.innerHTML = `
+                <div class="card-header">${card.nombre}</div>
+                <div class="card-image" style="height: 50px; font-size: 0.65em;">${card.tipo}</div>
+                ${statsHTML}
+            `;
+            
+            return cardDiv;
         }
 
         function updateDeckCount() {
@@ -430,13 +535,83 @@
             
             playerHand.forEach((card, index) => {
                 const cardElement = createCardElement(card, index);
+                
+                // Si es curación, agregar evento de clic
+                if (card.tipo === 'Curación') {
+                    cardElement.onclick = () => selectHealingCard(card, index);
+                    cardElement.style.cursor = 'pointer';
+                }
+                
                 handDiv.appendChild(cardElement);
             });
+        }
+
+        function selectHealingCard(card, handIndex) {
+            if (selectedHealingCard === handIndex) {
+                // Deseleccionar
+                selectedHealingCard = null;
+                renderHand();
+                clearHealableSlots();
+                addLog('Curación cancelada');
+            } else {
+                // Seleccionar esta carta de curación
+                selectedHealingCard = handIndex;
+                renderHand();
+                highlightHealableSlots();
+                addLog(`Seleccionaste: ${card.nombre} - Clic en un luchador para curarlo`);
+            }
+        }
+
+        function highlightHealableSlots() {
+            const playerSlots = document.querySelectorAll('#player-field .combat-slot');
+            playerSlots.forEach((slot, index) => {
+                if (playerField[index] && playerField[index].tipo === 'Luchador') {
+                    slot.classList.add('healable');
+                    slot.onclick = () => applyHealing(index);
+                }
+            });
+        }
+
+        function clearHealableSlots() {
+            const playerSlots = document.querySelectorAll('#player-field .combat-slot');
+            playerSlots.forEach(slot => {
+                slot.classList.remove('healable');
+                slot.onclick = null;
+            });
+        }
+
+        function applyHealing(slotIndex) {
+            if (selectedHealingCard === null) return;
+            
+            const healCard = playerHand[selectedHealingCard];
+            const targetCard = playerField[slotIndex];
+            
+            if (!targetCard) return;
+            
+            // Aplicar curación
+            const healAmount = nightModeActive ? Math.floor(healCard.curacion / 2) : healCard.curacion;
+            targetCard.vida += healAmount;
+            
+            addLog(`${targetCard.nombre} curado +${healAmount} vida (Total: ${targetCard.vida})`);
+            
+            // Remover carta de curación de la mano
+            playerHand.splice(selectedHealingCard, 1);
+            selectedHealingCard = null;
+            
+            renderHand();
+            renderField();
+            clearHealableSlots();
         }
 
         function createCardElement(card, handIndex = -1) {
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
+            
+            // Resaltar si es la carta de curación seleccionada
+            if (handIndex === selectedHealingCard) {
+                cardDiv.classList.add('healing-selected');
+            }
+            
             cardDiv.draggable = true;
             
             if (handIndex >= 0) {
@@ -625,7 +800,7 @@
         function processCombat() {
             addLog('=== FASE DE COMBATE ===');
             
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 3; i++) { // CAMBIADO A 3
                 const playerCard = playerField[i];
                 const opponentCard = opponentField[i];
                 
@@ -682,23 +857,131 @@
         function opponentTurn() {
             addLog('--- Turno del oponente ---');
             
-            // Buscar un slot vacío
+            if (!gameActive || botHand.length === 0) {
+                addLog('Bot sin cartas disponibles');
+                return;
+            }
+            
+            // Primero, intentar usar curación si tiene luchadores heridos
+            const healingCards = botHand.filter(c => c.tipo === 'Curación');
+            const injuredSlots = opponentField
+                .map((card, index) => ({ card, index }))
+                .filter(slot => slot.card && slot.card.tipo === 'Luchador' && slot.card.vida < 8);
+            
+            if (healingCards.length > 0 && injuredSlots.length > 0) {
+                // 50% de probabilidad de usar curación (o 70% en difícil)
+                const useHealing = botDifficulty === 'hard' ? Math.random() < 0.7 : Math.random() < 0.5;
+                
+                if (useHealing) {
+                    const healCard = healingCards[0];
+                    const targetSlot = injuredSlots[0];
+                    
+                    const healAmount = nightModeActive ? Math.floor(healCard.curacion / 2) : healCard.curacion;
+                    targetSlot.card.vida += healAmount;
+                    
+                    addLog(`Bot usó ${healCard.nombre} en ${targetSlot.card.nombre} (+${healAmount} vida)`);
+                    
+                    // Remover carta de la mano del bot
+                    const cardIndex = botHand.findIndex(c => c.id === healCard.id);
+                    if (cardIndex !== -1) {
+                        botHand.splice(cardIndex, 1);
+                    }
+                    
+                    renderField();
+                    renderBotHand();
+                    return;
+                }
+            }
+            
+            // Si no usó curación, jugar luchador
             const emptySlot = opponentField.findIndex(slot => slot === null);
             
             if (emptySlot !== -1) {
-                // Crear una carta enemiga simple
-                const enemyCard = {
-                    id: 'enemy_' + Date.now(),
-                    nombre: 'Guerrero Nora',
-                    tipo: 'Luchador',
-                    ataque: Math.floor(Math.random() * 5) + 3,
-                    vida: Math.floor(Math.random() * 5) + 5,
-                    velocidad: Math.floor(Math.random() * 5) + 3
-                };
+                // Solo seleccionar luchadores de la mano
+                const fighters = botHand.filter(c => c.tipo === 'Luchador');
                 
-                opponentField[emptySlot] = enemyCard;
-                addLog(`Oponente jugó: ${enemyCard.nombre}`);
-                renderField();
+                if (fighters.length === 0) {
+                    addLog('Bot sin luchadores disponibles');
+                    return;
+                }
+                
+                // IA del BOT según dificultad (solo para luchadores)
+                const cardToPlay = selectBotCard(emptySlot, fighters);
+                
+                if (cardToPlay) {
+                    // Crear copia de la carta para el bot
+                    const botCard = {
+                        ...cardToPlay,
+                        id: 'bot_' + Date.now() + '_' + Math.random()
+                    };
+                    
+                    opponentField[emptySlot] = botCard;
+                    addLog(`Oponente jugó: ${botCard.nombre} (ATK:${botCard.ataque} VID:${botCard.vida} VEL:${botCard.velocidad})`);
+                    
+                    // Remover carta de la mano del bot
+                    const cardIndex = botHand.findIndex(c => c.id === cardToPlay.id);
+                    if (cardIndex !== -1) {
+                        botHand.splice(cardIndex, 1);
+                    }
+                    
+                    renderField();
+                    renderBotHand();
+                }
+            } else {
+                addLog('Campo del oponente lleno');
+            }
+        }
+
+        function selectBotCard(targetSlot, availableCards) {
+            if (availableCards.length === 0) return null;
+            
+            const playerCardInSlot = playerField[targetSlot];
+            
+            switch(botDifficulty) {
+                case 'easy':
+                    // Fácil: Juega carta aleatoria
+                    return availableCards[Math.floor(Math.random() * availableCards.length)];
+                
+                case 'medium':
+                    // Medio: Intenta igualar el ataque del jugador
+                    if (playerCardInSlot) {
+                        const similarCards = availableCards.filter(c => 
+                            Math.abs(c.ataque - playerCardInSlot.ataque) <= 2
+                        );
+                        if (similarCards.length > 0) {
+                            return similarCards[Math.floor(Math.random() * similarCards.length)];
+                        }
+                    }
+                    return availableCards[Math.floor(Math.random() * availableCards.length)];
+                
+                case 'hard':
+                    // Difícil: Juega la mejor carta estratégicamente
+                    if (playerCardInSlot) {
+                        // Busca carta que pueda ganar por velocidad
+                        const fasterCards = availableCards.filter(c => 
+                            c.velocidad > playerCardInSlot.velocidad && 
+                            c.ataque >= playerCardInSlot.vida
+                        );
+                        if (fasterCards.length > 0) {
+                            return fasterCards.reduce((best, card) => 
+                                card.ataque > best.ataque ? card : best
+                            );
+                        }
+                        
+                        // Si no, busca la carta más fuerte disponible
+                        return availableCards.reduce((best, card) => {
+                            const bestScore = best.ataque + best.vida + best.velocidad;
+                            const cardScore = card.ataque + card.vida + card.velocidad;
+                            return cardScore > bestScore ? card : best;
+                        });
+                    }
+                    // Si no hay rival, juega la más fuerte
+                    return availableCards.reduce((best, card) => 
+                        (card.ataque + card.vida) > (best.ataque + best.vida) ? card : best
+                    );
+                
+                default:
+                    return availableCards[0];
             }
         }
 
@@ -711,7 +994,43 @@
             addLog('=== Bienvenido a Las Luchas de las Tribus ===');
             addLog('Tienes 2 minutos - Modo Noche se activa al minuto 1');
             addLog('Arrastra tus cartas luchadores al campo');
+            
+            // El BOT juega sus cartas iniciales después de cargar
+            setTimeout(() => {
+                botInitialPlay();
+            }, 2000);
         };
+        
+        // ========================================
+        // JUGADA INICIAL DEL BOT
+        // ========================================
+        function botInitialPlay() {
+            addLog('--- Bot jugando sus cartas iniciales ---');
+            
+            // El bot juega sus 3 luchadores automáticamente
+            const fighters = botHand.filter(c => c.tipo === 'Luchador');
+            
+            for (let i = 0; i < 3 && i < fighters.length; i++) {
+                const card = fighters[i];
+                const botCard = {
+                    ...card,
+                    id: 'bot_' + Date.now() + '_' + i
+                };
+                
+                opponentField[i] = botCard;
+                addLog(`Bot jugó: ${botCard.nombre}`);
+                
+                // Remover de la mano
+                const cardIndex = botHand.findIndex(c => c.id === card.id);
+                if (cardIndex !== -1) {
+                    botHand.splice(cardIndex, 1);
+                }
+            }
+            
+            renderField();
+            renderBotHand();
+            addLog('¡Ahora es tu turno! Arrastra tus luchadores al campo');
+        }
     </script>
 </body>
 </html>

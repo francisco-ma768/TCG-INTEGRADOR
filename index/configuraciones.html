@@ -3,43 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuraciones - Verso y Venganza</title>
+    <title>Configuraciones - Las Luchas de las Tribus</title>
     
     <style>
-        /* ---------------------------------------------------- */
-        /* ESTILOS DE CONFIGURACIÓN */
-        /* ---------------------------------------------------- */
-
-        /* Fondo para la pantalla de ajustes (usa una imagen consistente con tu estilo) */
         body {
-            /* Puedes usar 'assets/jungla.png' o cualquier otro fondo que te guste */
             background-image: url('assets/jungla.png'); 
             background-size: cover; 
             background-position: center; 
             background-attachment: fixed;
-            
             margin: 0;
             padding: 0;
             height: 100vh;
             font-family: Arial, sans-serif; 
-            
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
-        /* Contenedor central (la "tablilla" de ajustes) */
         .settings-tablilla {
             width: 80%;
             max-width: 500px;
-            /* Usamos un color gris oscuro semi-transparente similar a tu menú */
             background-color: rgba(50, 50, 50, 0.95); 
             color: white; 
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
-            border: 3px solid #ffcc00; /* Borde dorado/amarillo */
+            border: 3px solid #ffcc00;
             text-align: center;
         }
 
@@ -50,7 +40,6 @@
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
         }
 
-        /* Estilos de las opciones */
         .setting-option {
             display: flex;
             justify-content: space-between;
@@ -64,20 +53,28 @@
             border-bottom: none;
         }
 
-        /* Estilo para los inputs (sliders y select) */
         .setting-input input[type="range"] {
             width: 150px;
             cursor: pointer;
         }
-        
+
         .setting-input select {
             padding: 5px;
             background-color: #777;
             color: white;
             border-radius: 5px;
+            border: 1px solid #ffcc00;
+            cursor: pointer;
         }
 
-        /* Botón de volver al Index */
+        .value-display {
+            display: inline-block;
+            width: 40px;
+            text-align: center;
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
         .back-button {
             margin-top: 30px;
             padding: 10px 25px;
@@ -95,33 +92,47 @@
             background-color: #c44f45;
             transform: scale(1.02);
         }
+
+        .save-indicator {
+            margin-top: 15px;
+            color: #44ff44;
+            font-size: 0.9em;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .save-indicator.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
 
     <div class="settings-tablilla">
-        <h1>Ajustes de Juego</h1>
+        <h1>⚙️ Ajustes de Juego</h1>
 
         <div class="setting-option">
             <span>Volumen de Música:</span>
             <div class="setting-input">
-                <input type="range" min="0" max="100" value="70">
+                <input type="range" min="0" max="100" value="70" id="music-volume" oninput="updateVolume('music')">
+                <span class="value-display" id="music-value">70</span>%
             </div>
         </div>
 
         <div class="setting-option">
             <span>Volumen de Efectos (SFX):</span>
             <div class="setting-input">
-                <input type="range" min="0" max="100" value="90">
+                <input type="range" min="0" max="100" value="90" id="sfx-volume" oninput="updateVolume('sfx')">
+                <span class="value-display" id="sfx-value">90</span>%
             </div>
         </div>
         
         <div class="setting-option">
             <span>Idioma:</span>
             <div class="setting-input">
-                <select>
-                    <option value="es">Español</option>
-                    <option value="en">English</option>
+                <select id="language" onchange="updateLanguage()">
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="en">🇬🇧 English</option>
                 </select>
             </div>
         </div>
@@ -129,12 +140,112 @@
         <div class="setting-option">
             <span>Brillo de Pantalla:</span>
             <div class="setting-input">
-                <input type="range" min="0" max="100" value="100">
+                <input type="range" min="50" max="100" value="100" id="brightness" oninput="updateBrightness()">
+                <span class="value-display" id="brightness-value">100</span>%
             </div>
         </div>
 
+        <div class="setting-option">
+            <span>Dificultad del Bot:</span>
+            <div class="setting-input">
+                <select id="bot-difficulty" onchange="updateBotDifficulty()">
+                    <option value="easy">😊 Fácil</option>
+                    <option value="medium" selected>🤔 Medio</option>
+                    <option value="hard">😈 Difícil</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="save-indicator" id="save-indicator">✓ Configuración guardada</div>
+
         <button class="back-button" onclick="window.location.href='index.html';">Volver al Menú</button>
     </div>
+
+    <script>
+        // Cargar configuraciones guardadas al iniciar
+        window.onload = function() {
+            loadSettings();
+        };
+
+        function loadSettings() {
+            // Cargar desde localStorage (permitido para configuraciones)
+            const settings = {
+                musicVolume: localStorage.getItem('musicVolume') || 70,
+                sfxVolume: localStorage.getItem('sfxVolume') || 90,
+                language: localStorage.getItem('language') || 'es',
+                brightness: localStorage.getItem('brightness') || 100,
+                botDifficulty: localStorage.getItem('botDifficulty') || 'medium'
+            };
+
+            // Aplicar configuraciones
+            document.getElementById('music-volume').value = settings.musicVolume;
+            document.getElementById('music-value').textContent = settings.musicVolume;
+            
+            document.getElementById('sfx-volume').value = settings.sfxVolume;
+            document.getElementById('sfx-value').textContent = settings.sfxVolume;
+            
+            document.getElementById('language').value = settings.language;
+            document.getElementById('brightness').value = settings.brightness;
+            document.getElementById('brightness-value').textContent = settings.brightness;
+            document.getElementById('bot-difficulty').value = settings.botDifficulty;
+
+            // Aplicar brillo actual
+            applyBrightness(settings.brightness);
+        }
+
+        function updateVolume(type) {
+            const slider = document.getElementById(`${type}-volume`);
+            const display = document.getElementById(`${type}-value`);
+            const value = slider.value;
+            
+            display.textContent = value;
+            localStorage.setItem(`${type}Volume`, value);
+            
+            showSaveIndicator();
+        }
+
+        function updateLanguage() {
+            const language = document.getElementById('language').value;
+            localStorage.setItem('language', language);
+            showSaveIndicator();
+            
+            // Aquí puedes agregar lógica para cambiar el idioma
+            console.log('Idioma cambiado a:', language);
+        }
+
+        function updateBrightness() {
+            const slider = document.getElementById('brightness');
+            const display = document.getElementById('brightness-value');
+            const value = slider.value;
+            
+            display.textContent = value;
+            localStorage.setItem('brightness', value);
+            
+            applyBrightness(value);
+            showSaveIndicator();
+        }
+
+        function applyBrightness(value) {
+            // Aplicar filtro de brillo a toda la página
+            const brightness = value / 100;
+            document.body.style.filter = `brightness(${brightness})`;
+        }
+
+        function updateBotDifficulty() {
+            const difficulty = document.getElementById('bot-difficulty').value;
+            localStorage.setItem('botDifficulty', difficulty);
+            showSaveIndicator();
+        }
+
+        function showSaveIndicator() {
+            const indicator = document.getElementById('save-indicator');
+            indicator.classList.add('show');
+            
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+    </script>
 
 </body>
 </html>
