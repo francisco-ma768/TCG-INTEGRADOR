@@ -1,10 +1,8 @@
-/* ---------------------------------------------------- */
-/* 1. LAYOUT PRINCIPAL Y FONDO (BODY) */
-/* ---------------------------------------------------- */
+
+
 body {
-    /* **FONDO DE JUNGLA/BOSQUE** */
-    /* *** RUTA CORREGIDA: sube un nivel (..) y entra a la carpeta assets *** */
-    background-image: url('../assets/jungla.jpeg'); /* AJUSTAR el nombre y extensión si es necesario */
+
+    background-image: url('../assets/jungla.jpeg'); 
     background-size: cover; 
     background-position: center; 
     background-attachment: fixed;
@@ -13,32 +11,25 @@ body {
     padding: 0;
     height: 100vh;
     font-family: Arial, sans-serif; 
-    
-    /* LAYOUT: Usa Flexbox para dividir Izquierda/Derecha */
+
+  
     display: flex;
     justify-content: space-between; 
     align-items: center; 
     padding: 0 5%;
 }
 
-/* ---------------------------------------------------- */
-/* 2. LADO IZQUIERDO: IMAGEN DECORATIVA (Hombre, Cueva, Fuego) */
-/* ---------------------------------------------------- */
+
 .decorative-left-side {
     width: 45%; 
     height: 90vh; 
     
-    /* **IMAGEN DECORATIVA LATERAL** */
-    /* Usaremos el archivo de referencia de tu estructura */
-    background-image: url('../assets/pantalla pri.img'); /* RUTA CORREGIDA */
-    background-size: contain; 
+
+    background-image: url('../assets/pantalla pri.img'); 
     background-repeat: no-repeat;
     background-position: bottom left; 
 }
 
-/* ---------------------------------------------------- */
-/* 3. LADO DERECHO: CONTENEDOR DE TABLILLAS */
-/* ---------------------------------------------------- */
 .menu-tablillas-container {
     display: flex;
     flex-direction: column; 
@@ -46,9 +37,8 @@ body {
     margin-right: 5%; 
 }
 
-/* 4. ESTILO BASE DE LA TABLILLA DE PIEDRA */
 .stone-tablet {
-    background-color: rgba(180, 180, 180, 0.9); /* Gris semi-transparente (simula piedra) */
+    background-color: rgba(180, 180, 180, 0.9); 
     color: #333;
     padding: 20px 30px;
     width: 250px;
@@ -58,7 +48,7 @@ body {
     text-align: center;
 }
 
-/* 5. Estilos de Títulos y Botones */
+
 .stone-tablet header h2 {
     font-size: 1.3em;
     margin-top: 0;
@@ -97,7 +87,7 @@ body {
     background-color: #a87e5b;
 }
 
-/* Estilo del ícono de fuego (simplemente un círculo por ahora si no tienes la imagen) */
+
 .fire-icon {
     margin-top: 10px;
     width: 20px;

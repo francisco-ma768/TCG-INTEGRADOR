@@ -13,25 +13,77 @@
 
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #8B4513 0%, #654321 100%);
+            background: #654321;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
+            position: relative;
+            margin: 0;
+            padding: 0;
         }
 
-        .game-container {
-            width: 95%;
-            height: 95vh;
-            background: rgba(0, 0, 0, 0.3);
-            border: 4px solid #ffcc00;
+        /* Contador de 15 segundos en los controles */
+        .turn-timer-display {
+            font-size: 2em;
+            font-weight: bold;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 3px solid #666;
             border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            gap: 5px;
+            min-width: 80px;
+            text-align: center;
         }
+
+        .turn-timer-display.warning {
+            color: #ff0000;
+            border-color: #ff0000;
+            animation: blink 0.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Botón LISTO */
+        .ready-button {
+            padding: 10px 25px;
+            font-size: 1.3em;
+            background: #4CAF50;
+            color: white;
+            border: 3px solid #333;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .ready-button:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        .ready-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+.game-container {
+    width: 100%;
+    height: 100vh;
+    background: none; /* Sin fondo gris */
+    border: none; /* Sin borde */
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+}
+
 
         /* Header con información */
         .game-header {
@@ -161,6 +213,7 @@
             gap: 10px;
             justify-content: center;
             margin-top: 10px;
+            align-items: center;
         }
 
         button {
@@ -237,8 +290,9 @@
             </div>
             <div class="player-info" style="text-align: center;">
                 <div style="font-size: 1.5em; color: #ffcc00;" id="timer">2:00</div>
+                <div style="font-size: 1.8em; color: #ff4444; font-weight: bold;" id="turn-timer">15</div>
+                <div id="turn-indicator" style="font-size: 1em; color: #44ff44;">Tu Turno</div>
                 <div id="night-mode-indicator" style="display: none; color: #4444ff;">🌙 MODO NOCHE 🌙</div>
-                <div style="font-size: 0.9em;">Cartas en mazo: <span id="deck-count">0</span></div>
             </div>
             <div class="player-info">
                 <strong>Tribu Orah (Tú)</strong>
@@ -255,15 +309,11 @@
             <!-- Fila del oponente (ARRIBA) -->
             <div class="battle-row opponent-row" id="opponent-field">
                 <div class="combat-slot" data-slot="0"></div>
-                <div class="combat-slot" data-slot="1"></div>
-                <div class="combat-slot" data-slot="2"></div>
             </div>
 
             <!-- Fila del jugador (ABAJO) -->
             <div class="battle-row player-row" id="player-field">
                 <div class="combat-slot" data-slot="0"></div>
-                <div class="combat-slot" data-slot="1"></div>
-                <div class="combat-slot" data-slot="2"></div>
             </div>
         </div>
 
@@ -275,7 +325,8 @@
         <!-- Controles -->
         <div class="controls">
             <button onclick="window.location.href='index.html'">Volver al Menú</button>
-            <button id="end-turn-btn" onclick="endTurn()">Finalizar Turno</button>
+            <div class="turn-timer-display" id="turn-timer-display">15</div>
+            <button class="ready-button" id="ready-btn" onclick="passTurnManually()" disabled>LISTO ✓</button>
         </div>
     </div>
 
@@ -290,8 +341,8 @@
         // ========================================
         let deck = [];
         let playerHand = [];
-        let playerField = [null, null, null];
-        let opponentField = [null, null, null];
+        let playerField = [null]; // SOLO 1 SLOT
+        let opponentField = [null]; // SOLO 1 SLOT
         let currentTurn = 1;
         let gameActive = true;
         
@@ -299,6 +350,12 @@
         let timeRemaining = 120;
         let timerInterval = null;
         let nightModeActive = false;
+        
+        // Sistema de turnos de 15 segundos
+        let turnTimeRemaining = 15;
+        let turnTimerInterval = null;
+        let isPlayerTurnActive = false;
+        let cardPlayedThisTurn = false;
         
         // BOT
         let botDeck = [];
@@ -360,6 +417,146 @@
             }
         }
 
+        function startTurnTimer() {
+            turnTimeRemaining = 15;
+            cardPlayedThisTurn = false;
+            document.getElementById('ready-btn').disabled = true;
+            updateTurnTimerDisplay();
+            
+            if (turnTimerInterval) {
+                clearInterval(turnTimerInterval);
+            }
+            
+            turnTimerInterval = setInterval(() => {
+                if (!gameActive) {
+                    clearInterval(turnTimerInterval);
+                    return;
+                }
+                
+                turnTimeRemaining--;
+                updateTurnTimerDisplay();
+                
+                // Si se acaba el tiempo del turno
+                if (turnTimeRemaining <= 0) {
+                    clearInterval(turnTimerInterval);
+                    
+                    if (isPlayerTurnActive && !cardPlayedThisTurn) {
+                        // Sistema elige carta automáticamente
+                        autoPlayCard();
+                    }
+                    
+                    endPlayerTurn();
+                }
+            }, 1000);
+        }
+
+        function updateTurnTimerDisplay() {
+            const timerDisplay = document.getElementById('turn-timer-display');
+            if (!timerDisplay) return;
+            
+            timerDisplay.textContent = turnTimeRemaining;
+            
+            // Cambiar estilo según tiempo
+            if (turnTimeRemaining <= 5) {
+                timerDisplay.style.color = '#ff0000';
+                timerDisplay.classList.add('warning');
+            } else if (turnTimeRemaining <= 10) {
+                timerDisplay.style.color = '#ff8800';
+                timerDisplay.classList.remove('warning');
+            } else {
+                timerDisplay.style.color = '#44ff44';
+                timerDisplay.classList.remove('warning');
+            }
+        }
+
+        function autoPlayCard() {
+            // Sistema elige automáticamente una carta aleatoria
+            const availableCards = playerHand.filter(c => c.tipo === 'Luchador');
+            const emptySlot = playerField.findIndex(slot => slot === null);
+            
+            if (availableCards.length > 0 && emptySlot !== -1) {
+                const randomCard = availableCards[Math.floor(Math.random() * availableCards.length)];
+                playerField[emptySlot] = randomCard;
+                
+                const cardIndex = playerHand.findIndex(c => c.id === randomCard.id);
+                playerHand.splice(cardIndex, 1);
+                
+                addLog(`⏰ Tiempo agotado - Sistema jugó: ${randomCard.nombre}`);
+                renderHand();
+                renderField();
+            } else {
+                addLog('⏰ Tiempo agotado - Sin cartas para jugar');
+            }
+        }
+
+        function updateTurnTimerDisplay() {
+            const turnTimer = document.getElementById('turn-timer');
+            const timerDisplay = document.getElementById('turn-timer-display');
+            
+            if (turnTimer) turnTimer.textContent = turnTimeRemaining;
+            if (timerDisplay) {
+                timerDisplay.textContent = turnTimeRemaining;
+                
+                // Cambiar estilo según tiempo
+                if (turnTimeRemaining <= 5) {
+                    timerDisplay.style.color = '#ff0000';
+                    timerDisplay.classList.add('warning');
+                } else if (turnTimeRemaining <= 10) {
+                    timerDisplay.style.color = '#ff8800';
+                    timerDisplay.classList.remove('warning');
+                } else {
+                    timerDisplay.style.color = '#44ff44';
+                    timerDisplay.classList.remove('warning');
+                }
+            }
+        }
+
+        function updateTurnIndicator() {
+            const indicator = document.getElementById('turn-indicator');
+            if (isPlayerTurnActive) {
+                indicator.textContent = '▼ Tu Turno';
+                indicator.style.color = '#44ff44';
+            } else {
+                indicator.textContent = '▲ Turno del Rival';
+                indicator.style.color = '#ff4444';
+            }
+        }
+
+        function endPlayerTurn() {
+            // Resolver combate al final del turno
+            processCombat();
+            checkVictoryConditions();
+            
+            // Cambiar a turno del rival
+            switchTurn();
+        }
+
+        function switchTurn() {
+            isPlayerTurnActive = !isPlayerTurnActive;
+            updateTurnIndicator();
+            
+            if (isPlayerTurnActive) {
+                addLog('═══ Tu turno - 15 segundos ═══');
+                startTurnTimer();
+            } else {
+                addLog('═══ Turno del rival ═══');
+                
+                // Bot juega inmediatamente
+                setTimeout(() => {
+                    if (!isPlayerTurnActive && gameActive) {
+                        opponentTurn();
+                        
+                        // Después, resuelve combate y vuelve a tu turno
+                        setTimeout(() => {
+                            processCombat();
+                            checkVictoryConditions();
+                            switchTurn();
+                        }, 1000);
+                    }
+                }, 500);
+            }
+        }
+
         function activateNightMode() {
             nightModeActive = true;
             addLog('🌙 ¡MODO NOCHE ACTIVADO! Todos los luchadores pierden 1 de vida');
@@ -373,40 +570,34 @@
         }
 
         function applyNightModeDamage() {
-            // Daño al campo del jugador
+            addLog('🌙 === EFECTO DEL MODO NOCHE ===');
+            
+            // Todos los luchadores pierden 1 punto de vida
             playerField.forEach((card, index) => {
                 if (card && card.tipo === 'Luchador') {
-                    // TODAS las estadísticas bajan 1
                     card.vida -= 1;
-                    card.ataque = Math.max(1, card.ataque - 1);
-                    card.velocidad = Math.max(1, card.velocidad - 1);
-                    
-                    addLog(`${card.nombre}: -1 Vida, -1 Ataque, -1 Velocidad (Modo Noche)`);
+                    addLog(`${card.nombre}: -1 Vida (Ahora: ${card.vida})`);
                     
                     if (card.vida <= 0) {
-                        addLog(`💀 ${card.nombre} ha sido derrotado por la noche`);
+                        addLog(`💀 ${card.nombre} ha muerto por la noche`);
                         playerField[index] = null;
                     }
                 }
             });
             
-            // Daño al campo del oponente
             opponentField.forEach((card, index) => {
                 if (card && card.tipo === 'Luchador') {
-                    // TODAS las estadísticas bajan 1
                     card.vida -= 1;
-                    card.ataque = Math.max(1, card.ataque - 1);
-                    card.velocidad = Math.max(1, card.velocidad - 1);
-                    
-                    addLog(`${card.nombre} (enemigo): -1 en todas las stats (Modo Noche)`);
+                    addLog(`${card.nombre} (rival): -1 Vida (Ahora: ${card.vida})`);
                     
                     if (card.vida <= 0) {
-                        addLog(`💀 ${card.nombre} (enemigo) ha sido derrotado por la noche`);
+                        addLog(`💀 ${card.nombre} (rival) ha muerto por la noche`);
                         opponentField[index] = null;
                     }
                 }
             });
             
+            addLog('Las curaciones ahora curan 50% menos');
             renderField();
         }
 
@@ -442,8 +633,10 @@
                 // Cargar mazo del BOT (Tribu Nora)
                 await loadBotDeck();
                 
+                console.log('Deck del jugador:', deck);
+                console.log('Deck del bot:', botDeck);
+                
                 addLog(`Juego iniciado - Dificultad del bot: ${botDifficulty.toUpperCase()}`);
-                updateDeckCount();
                 drawInitialHand();
             } catch (error) {
                 addLog('ERROR: No se pudo cargar cartas.json');
@@ -523,6 +716,8 @@
             deck.forEach(card => {
                 playerHand.push(card);
             });
+            
+            console.log('Mano inicial cargada:', playerHand);
             renderHand();
         }
 
@@ -531,7 +726,20 @@
         // ========================================
         function renderHand() {
             const handDiv = document.getElementById('player-hand');
+            
+            if (!handDiv) {
+                console.error('No se encontró el elemento player-hand');
+                return;
+            }
+            
             handDiv.innerHTML = '';
+            
+            console.log('Renderizando mano:', playerHand);
+            
+            if (playerHand.length === 0) {
+                handDiv.innerHTML = '<div style="color: white;">Sin cartas en la mano</div>';
+                return;
+            }
             
             playerHand.forEach((card, index) => {
                 const cardElement = createCardElement(card, index);
@@ -581,6 +789,16 @@
         }
 
         function applyHealing(slotIndex) {
+            if (!isPlayerTurnActive) {
+                addLog('⚠️ No es tu turno');
+                return;
+            }
+            
+            if (cardPlayedThisTurn) {
+                addLog('⚠️ Solo puedes jugar 1 carta por turno');
+                return;
+            }
+            
             if (selectedHealingCard === null) return;
             
             const healCard = playerHand[selectedHealingCard];
@@ -588,19 +806,23 @@
             
             if (!targetCard) return;
             
-            // Aplicar curación
             const healAmount = nightModeActive ? Math.floor(healCard.curacion / 2) : healCard.curacion;
             targetCard.vida += healAmount;
             
-            addLog(`${targetCard.nombre} curado +${healAmount} vida (Total: ${targetCard.vida})`);
+            addLog(`✓ ${targetCard.nombre} curado +${healAmount} vida (Total: ${targetCard.vida})`);
             
-            // Remover carta de curación de la mano
             playerHand.splice(selectedHealingCard, 1);
             selectedHealingCard = null;
             
             renderHand();
             renderField();
             clearHealableSlots();
+            
+            cardPlayedThisTurn = true;
+            
+            // Habilitar botón LISTO
+            document.getElementById('ready-btn').disabled = false;
+            addLog('Presiona LISTO para pasar turno o espera 15 seg');
         }
 
         function createCardElement(card, handIndex = -1) {
@@ -675,30 +897,56 @@
         function drop(e) {
             e.preventDefault();
             
+            if (!isPlayerTurnActive) {
+                addLog('⚠️ No es tu turno');
+                return;
+            }
+            
+            if (cardPlayedThisTurn) {
+                addLog('⚠️ Solo puedes jugar 1 carta por turno');
+                return;
+            }
+            
             if (draggedCardIndex === null) return;
             
             const slotIndex = parseInt(e.currentTarget.dataset.slot);
             const card = playerHand[draggedCardIndex];
             
-            // Verificar si el slot está ocupado
             if (playerField[slotIndex] !== null) {
                 addLog('Ese slot ya está ocupado');
                 return;
             }
             
-            // Solo luchadores van al campo
             if (card.tipo === 'Luchador') {
                 playerField[slotIndex] = card;
                 playerHand.splice(draggedCardIndex, 1);
                 
-                addLog(`Jugaste: ${card.nombre}`);
+                addLog(`✓ Jugaste: ${card.nombre}`);
                 renderHand();
                 renderField();
+                
+                cardPlayedThisTurn = true;
+                
+                // Habilitar botón LISTO
+                document.getElementById('ready-btn').disabled = false;
+                addLog('Presiona LISTO para pasar turno o espera 15 seg');
             } else {
                 addLog('Las curaciones no se juegan en el campo');
             }
             
             draggedCardIndex = null;
+        }
+
+        function passTurnManually() {
+            if (!cardPlayedThisTurn) return;
+            
+            addLog('✓ Pasaste turno manualmente');
+            document.getElementById('ready-btn').disabled = true;
+            clearInterval(turnTimerInterval);
+            
+            setTimeout(() => {
+                endPlayerTurn();
+            }, 500);
         }
 
         function renderField() {
@@ -738,61 +986,57 @@
         function endGame(reason) {
             gameActive = false;
             clearInterval(timerInterval);
+            clearInterval(turnTimerInterval);
             
             let message = '';
             if (reason === 'tiempo') {
-                // Contar luchadores vivos
+                // Victoria por tiempo - según el manual
                 const playerAlive = playerField.filter(c => c !== null).length;
                 const opponentAlive = opponentField.filter(c => c !== null).length;
                 
                 if (playerAlive > opponentAlive) {
-                    message = `⏰ ¡VICTORIA! Tiempo agotado. Tienes más luchadores (${playerAlive} vs ${opponentAlive})`;
+                    message = `⏰ ¡VICTORIA POR TIEMPO! Tienes más luchadores (${playerAlive} vs ${opponentAlive})`;
                 } else if (opponentAlive > playerAlive) {
-                    message = `⏰ DERROTA. Tiempo agotado. El oponente tiene más luchadores (${opponentAlive} vs ${playerAlive})`;
+                    message = `⏰ DERROTA POR TIEMPO. El rival tiene más luchadores (${opponentAlive} vs ${playerAlive})`;
                 } else {
-                    message = `⏰ EMPATE. Ambos tienen ${playerAlive} luchadores`;
+                    // Mismo número de luchadores - contar vida total
+                    const playerTotalLife = playerField.reduce((sum, c) => sum + (c ? c.vida : 0), 0);
+                    const opponentTotalLife = opponentField.reduce((sum, c) => sum + (c ? c.vida : 0), 0);
+                    
+                    if (playerTotalLife > opponentTotalLife) {
+                        message = `⏰ ¡VICTORIA POR TIEMPO! Mayor vida total (${playerTotalLife} vs ${opponentTotalLife})`;
+                    } else if (opponentTotalLife > playerTotalLife) {
+                        message = `⏰ DERROTA POR TIEMPO. Rival con mayor vida total (${opponentTotalLife} vs ${playerTotalLife})`;
+                    } else {
+                        message = `⏰ EMPATE. Mismo número de luchadores y vida total`;
+                    }
                 }
-            } else if (reason === 'sin_cartas') {
-                message = '💀 DERROTA. Te quedaste sin cartas';
             } else if (reason === 'victoria') {
-                message = '🎉 ¡VICTORIA! Derrotaste a todos los luchadores enemigos';
+                message = '🎉 ¡VICTORIA DIRECTA! Derrotaste a todos los luchadores enemigos';
+            } else if (reason === 'sin_cartas') {
+                message = '💀 DERROTA DIRECTA. El rival derrotó a todos tus luchadores';
             }
             
             addLog(message);
-            alert(message);
-            document.getElementById('end-turn-btn').disabled = true;
+            alert(message + '\n\nGracias por jugar Las Luchas de las Tribus');
         }
         // ========================================
-        // LÓGICA DE TURNOS
+        // LÓGICA DE TURNOS (ELIMINADA - AHORA ES AUTOMÁTICO)
         // ========================================
-        function endTurn() {
+        function checkVictoryConditions() {
+            // No verificar victoria si ambos están jugando todavía
             if (!gameActive) return;
             
-            addLog('--- Fin de tu turno ---');
-            
-            // Fase de combate
-            processCombat();
-            
-            // Verificar condiciones de victoria
-            checkVictoryConditions();
-            
-            // Turno del oponente
-            setTimeout(() => {
-                if (gameActive) {
-                    opponentTurn();
-                    currentTurn++;
-                    addLog('--- Tu turno ---');
-                }
-            }, 1500);
-        }
-
-        function checkVictoryConditions() {
             const playerAlive = playerField.filter(c => c !== null).length;
             const opponentAlive = opponentField.filter(c => c !== null).length;
             
-            if (opponentAlive === 0 && playerAlive > 0) {
+            const playerHasCards = playerHand.length > 0;
+            const opponentHasCards = botHand.length > 0;
+            
+            // Solo terminar si realmente no hay forma de seguir jugando
+            if (opponentAlive === 0 && !opponentHasCards && playerAlive > 0) {
                 endGame('victoria');
-            } else if (playerAlive === 0 && opponentAlive > 0) {
+            } else if (playerAlive === 0 && !playerHasCards && opponentAlive > 0) {
                 endGame('sin_cartas');
             }
         }
@@ -800,54 +1044,68 @@
         function processCombat() {
             addLog('=== FASE DE COMBATE ===');
             
-            for (let i = 0; i < 3; i++) { // CAMBIADO A 3
-                const playerCard = playerField[i];
-                const opponentCard = opponentField[i];
-                
-                if (playerCard && opponentCard) {
-                    // Combate directo
-                    resolveCombat(playerCard, opponentCard, i);
-                }
+            // SOLO 1 SLOT
+            const playerCard = playerField[0];
+            const opponentCard = opponentField[0];
+            
+            // Solo hay combate si ambos tienen carta
+            if (playerCard && opponentCard) {
+                resolveCombat(playerCard, opponentCard, 0);
             }
         }
 
         function resolveCombat(card1, card2, slotIndex) {
+            addLog(`⚔️ Combate en slot ${slotIndex + 1}:`);
+            
             // Determinar quién ataca primero por velocidad
-            let attacker, defender;
+            let first, second, firstIsPlayer;
+            
             if (card1.velocidad > card2.velocidad) {
-                attacker = card1;
-                defender = card2;
+                first = card1;
+                second = card2;
+                firstIsPlayer = true;
+                addLog(`${first.nombre} (VEL:${first.velocidad}) ataca primero`);
             } else if (card2.velocidad > card1.velocidad) {
-                attacker = card2;
-                defender = card1;
+                first = card2;
+                second = card1;
+                firstIsPlayer = false;
+                addLog(`${first.nombre} (VEL:${first.velocidad}) ataca primero`);
             } else {
                 // Mismo velocidad - aleatorio
                 if (Math.random() > 0.5) {
-                    attacker = card1;
-                    defender = card2;
+                    first = card1;
+                    second = card2;
+                    firstIsPlayer = true;
                 } else {
-                    attacker = card2;
-                    defender = card1;
+                    first = card2;
+                    second = card1;
+                    firstIsPlayer = false;
                 }
+                addLog(`Misma velocidad - Orden aleatorio`);
             }
             
-            // El atacante golpea primero
-            defender.vida -= attacker.ataque;
-            addLog(`${attacker.nombre} ataca a ${defender.nombre} (${attacker.ataque} daño)`);
+            // PRIMER ATAQUE
+            second.vida -= first.ataque;
+            addLog(`${first.nombre} ataca → ${second.nombre} pierde ${first.ataque} vida (Vida restante: ${second.vida})`);
             
-            // Si el defensor sobrevive, contraataca
-            if (defender.vida > 0) {
-                attacker.vida -= defender.ataque;
-                addLog(`${defender.nombre} contraataca a ${attacker.nombre} (${defender.ataque} daño)`);
+            // Si el segundo sobrevive, contraataca
+            if (second.vida > 0) {
+                first.vida -= second.ataque;
+                addLog(`${second.nombre} contraataca → ${first.nombre} pierde ${second.ataque} vida (Vida restante: ${first.vida})`);
+            } else {
+                addLog(`💀 ${second.nombre} ha sido derrotado`);
+            }
+            
+            // Verificar si el primero también murió
+            if (first.vida <= 0) {
+                addLog(`💀 ${first.nombre} ha sido derrotado`);
             }
             
             // Eliminar cartas muertas
             if (card1.vida <= 0) {
-                addLog(`💀 ${card1.nombre} ha sido derrotado`);
                 playerField[slotIndex] = null;
             }
             if (card2.vida <= 0) {
-                addLog(`💀 ${card2.nombre} ha sido derrotado`);
                 opponentField[slotIndex] = null;
             }
             
@@ -862,14 +1120,16 @@
                 return;
             }
             
+            // BOT SOLO PUEDE JUGAR 1 CARTA POR TURNO
+            let botPlayedCard = false;
+            
             // Primero, intentar usar curación si tiene luchadores heridos
             const healingCards = botHand.filter(c => c.tipo === 'Curación');
             const injuredSlots = opponentField
                 .map((card, index) => ({ card, index }))
                 .filter(slot => slot.card && slot.card.tipo === 'Luchador' && slot.card.vida < 8);
             
-            if (healingCards.length > 0 && injuredSlots.length > 0) {
-                // 50% de probabilidad de usar curación (o 70% en difícil)
+            if (healingCards.length > 0 && injuredSlots.length > 0 && !botPlayedCard) {
                 const useHealing = botDifficulty === 'hard' ? Math.random() < 0.7 : Math.random() < 0.5;
                 
                 if (useHealing) {
@@ -881,54 +1141,51 @@
                     
                     addLog(`Bot usó ${healCard.nombre} en ${targetSlot.card.nombre} (+${healAmount} vida)`);
                     
-                    // Remover carta de la mano del bot
                     const cardIndex = botHand.findIndex(c => c.id === healCard.id);
                     if (cardIndex !== -1) {
                         botHand.splice(cardIndex, 1);
                     }
                     
+                    botPlayedCard = true;
                     renderField();
                     renderBotHand();
-                    return;
                 }
             }
             
-            // Si no usó curación, jugar luchador
-            const emptySlot = opponentField.findIndex(slot => slot === null);
-            
-            if (emptySlot !== -1) {
-                // Solo seleccionar luchadores de la mano
-                const fighters = botHand.filter(c => c.tipo === 'Luchador');
+            // Si no usó curación, jugar luchador (SOLO SI AÚN NO JUGÓ CARTA)
+            if (!botPlayedCard) {
+                const emptySlot = opponentField.findIndex(slot => slot === null);
                 
-                if (fighters.length === 0) {
-                    addLog('Bot sin luchadores disponibles');
-                    return;
-                }
-                
-                // IA del BOT según dificultad (solo para luchadores)
-                const cardToPlay = selectBotCard(emptySlot, fighters);
-                
-                if (cardToPlay) {
-                    // Crear copia de la carta para el bot
-                    const botCard = {
-                        ...cardToPlay,
-                        id: 'bot_' + Date.now() + '_' + Math.random()
-                    };
+                if (emptySlot !== -1) {
+                    const fighters = botHand.filter(c => c.tipo === 'Luchador');
                     
-                    opponentField[emptySlot] = botCard;
-                    addLog(`Oponente jugó: ${botCard.nombre} (ATK:${botCard.ataque} VID:${botCard.vida} VEL:${botCard.velocidad})`);
-                    
-                    // Remover carta de la mano del bot
-                    const cardIndex = botHand.findIndex(c => c.id === cardToPlay.id);
-                    if (cardIndex !== -1) {
-                        botHand.splice(cardIndex, 1);
+                    if (fighters.length === 0) {
+                        addLog('Bot sin luchadores disponibles');
+                        return;
                     }
                     
-                    renderField();
-                    renderBotHand();
+                    const cardToPlay = selectBotCard(emptySlot, fighters);
+                    
+                    if (cardToPlay) {
+                        const botCard = {
+                            ...cardToPlay,
+                            id: 'bot_' + Date.now() + '_' + Math.random()
+                        };
+                        
+                        opponentField[emptySlot] = botCard;
+                        addLog(`Oponente jugó: ${botCard.nombre} (ATK:${botCard.ataque} VID:${botCard.vida} VEL:${botCard.velocidad})`);
+                        
+                        const cardIndex = botHand.findIndex(c => c.id === cardToPlay.id);
+                        if (cardIndex !== -1) {
+                            botHand.splice(cardIndex, 1);
+                        }
+                        
+                        renderField();
+                        renderBotHand();
+                    }
+                } else {
+                    addLog('Campo del oponente lleno');
                 }
-            } else {
-                addLog('Campo del oponente lleno');
             }
         }
 
@@ -992,45 +1249,17 @@
             loadCards();
             startTimer();
             addLog('=== Bienvenido a Las Luchas de las Tribus ===');
-            addLog('Tienes 2 minutos - Modo Noche se activa al minuto 1');
-            addLog('Arrastra tus cartas luchadores al campo');
+            addLog('Sistema de turnos: 15 segundos por jugador');
+            addLog('Cada jugador juega 1 carta por turno');
             
-            // El BOT juega sus cartas iniciales después de cargar
+            // Después de cargar, iniciar con el turno del jugador
             setTimeout(() => {
-                botInitialPlay();
+                isPlayerTurnActive = true;
+                updateTurnIndicator();
+                startTurnTimer();
+                addLog('--- Tu turno - Tienes 15 segundos ---');
             }, 2000);
         };
-        
-        // ========================================
-        // JUGADA INICIAL DEL BOT
-        // ========================================
-        function botInitialPlay() {
-            addLog('--- Bot jugando sus cartas iniciales ---');
-            
-            // El bot juega sus 3 luchadores automáticamente
-            const fighters = botHand.filter(c => c.tipo === 'Luchador');
-            
-            for (let i = 0; i < 3 && i < fighters.length; i++) {
-                const card = fighters[i];
-                const botCard = {
-                    ...card,
-                    id: 'bot_' + Date.now() + '_' + i
-                };
-                
-                opponentField[i] = botCard;
-                addLog(`Bot jugó: ${botCard.nombre}`);
-                
-                // Remover de la mano
-                const cardIndex = botHand.findIndex(c => c.id === card.id);
-                if (cardIndex !== -1) {
-                    botHand.splice(cardIndex, 1);
-                }
-            }
-            
-            renderField();
-            renderBotHand();
-            addLog('¡Ahora es tu turno! Arrastra tus luchadores al campo');
-        }
     </script>
 </body>
 </html>
