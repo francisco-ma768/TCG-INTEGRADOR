@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+<body>
+    <!-- Control de música -->
+    <div class="music-control" id="music-btn" onclick="toggleMusic()"><!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -22,18 +24,20 @@
             position: relative;
             margin: 0;
             padding: 0;
+            overflow: hidden;
         }
 
         /* Contador de 15 segundos en los controles */
         .turn-timer-display {
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: bold;
-            padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 3px solid #666;
+            padding: 8px 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px solid #ffcc00;
             border-radius: 10px;
-            min-width: 80px;
+            min-width: 70px;
             text-align: center;
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
         }
 
         .turn-timer-display.warning {
@@ -50,7 +54,7 @@
         /* Botón LISTO */
         .ready-button {
             padding: 10px 25px;
-            font-size: 1.3em;
+            font-size: 1.1em;
             background: #4CAF50;
             color: white;
             border: 3px solid #333;
@@ -58,11 +62,13 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.2s;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
         }
 
         .ready-button:hover {
             background: #45a049;
             transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
         }
 
         .ready-button:disabled {
@@ -74,28 +80,29 @@
         .game-container {
             width: 100%;
             height: 100vh;
+            max-height: 100vh;
             background: none;
             border: none;
             display: flex;
             flex-direction: column;
-            padding: 0;
-            gap: 0;
+            padding: 5px;
+            gap: 2px;
             position: relative;
             z-index: 1;
+            overflow: hidden;
         }
 
         /* Header con información */
         .game-header {
             display: flex;
             justify-content: space-between;
-            padding: 10px;
+            padding: 5px 10px;
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
-            margin-bottom: 10px;
         }
 
         .player-info {
-            font-size: 1.2em;
+            font-size: 1em;
         }
 
         /* Zona de combate */
@@ -104,8 +111,8 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 40px;
-            padding: 20px 0;
+            gap: 15px;
+            padding: 5px 0;
         }
 
         .battle-row {
@@ -121,8 +128,8 @@
 
         /* Slots de combate */
         .combat-slot {
-            width: 140px;
-            height: 200px;
+            width: 110px;
+            height: 150px;
             border: 3px dashed rgba(255, 255, 255, 0.4);
             border-radius: 10px;
             display: flex;
@@ -130,6 +137,7 @@
             justify-content: center;
             background: rgba(0, 0, 0, 0.2);
             position: relative;
+            overflow: visible;
         }
 
         .combat-slot.occupied {
@@ -145,88 +153,123 @@
 
         /* Cartas */
         .card {
-            width: 130px;
-            height: 190px;
+            width: 100px;
+            height: 140px;
             background: linear-gradient(135deg, #5d0f19 0%, #3a0a10 100%);
             border: 3px solid #f5e6b9;
             border-radius: 8px;
-            padding: 8px;
+            padding: 6px;
             cursor: grab;
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1;
         }
 
         .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #ffcc00;
+            width: 150px;
+            height: 220px;
+            transform: scale(1.1) translateY(-30px);
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .card .card-description {
+            display: none;
+            font-size: 0.65em;
+            text-align: center;
+            margin: 5px 0;
+            color: #ddd;
+            flex-grow: 1;
+        }
+
+        .card:hover .card-description {
+            display: block;
+        }
+
+        .card:hover {
+            box-shadow: 0 0 20px #ffcc00;
         }
 
         .card-header {
-            font-size: 0.9em;
+            font-size: 0.7em;
             font-weight: bold;
             text-align: center;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
             color: #ffcc00;
+            flex-shrink: 0;
         }
 
         .card-image {
             width: 100%;
-            height: 80px;
+            height: 45px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 5px;
-            font-size: 0.7em;
+            margin-bottom: 3px;
+            font-size: 0.6em;
+            flex-shrink: 0;
         }
 
         .card-stats {
             display: flex;
             justify-content: space-around;
-            font-size: 0.9em;
-            margin-top: 5px;
+            font-size: 0.8em;
+            margin-top: auto;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px;
+            border-radius: 5px;
+            flex-shrink: 0;
         }
 
         .stat {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 3px 6px;
-            border-radius: 3px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3px 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #000;
         }
 
-        .stat-atk { color: #ff4444; }
-        .stat-vida { color: #44ff44; }
-        .stat-vel { color: #4444ff; }
-        .stat-cur { color: #ffaa00; }
+        .stat-atk { color: #ff6666; border: 1px solid #ff6666; }
+        .stat-vida { color: #66ff66; border: 1px solid #66ff66; }
+        .stat-vel { color: #6699ff; border: 1px solid #6699ff; }
+        .stat-cur { color: #ffcc00; border: 1px solid #ffcc00; }
 
         /* Mano del jugador */
         .hand-zone {
-            height: 220px;
+            height: 160px;
             background: rgba(0, 0, 0, 0.4);
             border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
             padding: 10px;
             border: 2px solid #ffcc00;
+            overflow: visible;
         }
 
         /* Botones */
         .controls {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 10px;
-            align-items: center;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 1000;
         }
 
         button {
-            padding: 12px 25px;
-            font-size: 1.1em;
+            padding: 8px 15px;
+            font-size: 0.9em;
             background: #e6675e;
             color: white;
-            border: 3px solid #ffcc00;
+            border: 2px solid #ffcc00;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
@@ -249,19 +292,19 @@
         }
 
         .card.bot-card {
-            width: 100px;
-            height: 140px;
-            font-size: 0.75em;
+            width: 85px;
+            height: 110px;
+            font-size: 0.7em;
             background: linear-gradient(135deg, #1a0a0a 0%, #0a0505 100%);
             border-color: #ff0000;
         }
 
         .card.bot-card .card-header {
-            font-size: 0.75em;
+            font-size: 0.65em;
         }
 
         .card.bot-card .card-stats {
-            font-size: 0.7em;
+            font-size: 0.6em;
         }
 
         /* Mensajes de log */
@@ -269,20 +312,39 @@
             position: fixed;
             top: 10px;
             right: 10px;
-            width: 300px;
-            max-height: 400px;
+            width: 250px;
+            height: 150px;
             background: rgba(0, 0, 0, 0.8);
             border: 2px solid #ffcc00;
             border-radius: 5px;
             padding: 10px;
             overflow-y: auto;
-            font-size: 0.85em;
+            font-size: 0.75em;
+            z-index: 1000;
         }
 
         .log-entry {
             margin-bottom: 5px;
             padding: 3px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .music-control {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffcc00;
+            border-radius: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+            z-index: 1000;
+            font-size: 1.2em;
+            transition: all 0.2s;
+        }
+
+        .music-control:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -294,7 +356,7 @@
                 <strong>Tribu Nora (Rival)</strong>
             </div>
             <div class="player-info" style="text-align: center;">
-                <div style="font-size: 1.5em; color: #ffcc00;" id="timer">2:00</div>
+                <div style="font-size: 1.5em; color: #ffcc00;" id="timer">1:00</div>
                 <div style="font-size: 1.8em; color: #ff4444; font-weight: bold;" id="turn-timer">15</div>
                 <div id="turn-indicator" style="font-size: 1em; color: #44ff44;">Tu Turno</div>
                 <div id="night-mode-indicator" style="display: none; color: #4444ff;">🌙 MODO NOCHE 🌙</div>
@@ -305,7 +367,7 @@
         </div>
 
         <!-- Mano del BOT (arriba) -->
-        <div class="hand-zone" id="bot-hand" style="height: 120px; gap: 10px; margin-top: 10px; margin-bottom: 10px; opacity: 0.8;">
+        <div class="hand-zone" id="bot-hand" style="height: 90px; gap: 8px; opacity: 0.8;">
             <!-- Las cartas del bot se mostrarán aquí -->
         </div>
 
@@ -327,11 +389,11 @@
             <!-- Las cartas se cargarán aquí -->
         </div>
 
-        <!-- Controles -->
+        <!-- Controles fijos abajo a la izquierda -->
         <div class="controls">
-            <button onclick="window.location.href='index.html'">Volver al Menú</button>
             <div class="turn-timer-display" id="turn-timer-display">15</div>
             <button class="ready-button" id="ready-btn" onclick="passTurnManually()" disabled>LISTO ✓</button>
+            <button onclick="window.location.href='index.html'">Volver al Menú</button>
         </div>
     </div>
 
@@ -352,7 +414,7 @@
         let gameActive = true;
         
         // Variables del timer y modo noche
-        let timeRemaining = 120;
+        let timeRemaining = 60;
         let timerInterval = null;
         let nightModeActive = false;
         
@@ -401,8 +463,8 @@
                 timeRemaining--;
                 updateTimerDisplay();
                 
-                // Activar modo noche al minuto 1 (60 segundos restantes)
-                if (timeRemaining === 60 && !nightModeActive) {
+                // Activar modo noche a los 45 segundos (cuando quedan 15 segundos)
+                if (timeRemaining === 15 && !nightModeActive) {
                     activateNightMode();
                 }
                 
@@ -420,9 +482,9 @@
             timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
             
             // Cambiar color cuando queda poco tiempo
-            if (timeRemaining <= 30) {
+            if (timeRemaining <= 15) {
                 timerDisplay.style.color = '#ff4444';
-            } else if (timeRemaining <= 60) {
+            } else if (timeRemaining <= 30) {
                 timerDisplay.style.color = '#ffaa00';
             }
         }
@@ -803,12 +865,32 @@
             const healCard = playerHand[selectedHealingCard];
             const targetCard = playerField[slotIndex];
             
-            if (!targetCard) return;
+            // No se puede curar si no hay luchador o está derrotado
+            if (!targetCard) {
+                addLog('⚠️ No puedes curar un espacio vacío. El luchador ya fue derrotado.');
+                selectedHealingCard = null;
+                renderHand();
+                clearHealableSlots();
+                return;
+            }
+            
+            if (targetCard.vida <= 0) {
+                addLog('⚠️ No puedes curar a un luchador derrotado');
+                selectedHealingCard = null;
+                renderHand();
+                clearHealableSlots();
+                return;
+            }
             
             const healAmount = nightModeActive ? Math.floor(healCard.curacion / 2) : healCard.curacion;
+            const vidaAnterior = targetCard.vida;
             targetCard.vida += healAmount;
             
-            addLog(`✓ ${targetCard.nombre} curado +${healAmount} vida (Total: ${targetCard.vida})`);
+            if (nightModeActive) {
+                addLog(`🌙 Modo Noche: Curación reducida al 50%`);
+            }
+            addLog(`✚ ${healCard.nombre} usada en ${targetCard.nombre}`);
+            addLog(`❤ ${targetCard.nombre}: ${vidaAnterior} → ${targetCard.vida} (+${healAmount} vida)`);
             
             playerHand.splice(selectedHealingCard, 1);
             selectedHealingCard = null;
@@ -861,9 +943,7 @@
             cardDiv.innerHTML = `
                 <div class="card-header">${card.nombre}</div>
                 <div class="card-image">${card.tipo}</div>
-                <div style="font-size: 0.75em; text-align: center; margin: 5px 0;">
-                    ${card.descripcion.substring(0, 50)}...
-                </div>
+                <div class="card-description">${card.descripcion || 'Sin descripción'}</div>
                 ${statsHTML}
             `;
             
