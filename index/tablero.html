@@ -1,6 +1,4 @@
-<body>
-    <!-- Control de música -->
-    <div class="music-control" id="music-btn" onclick="toggleMusic()"><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -328,24 +326,6 @@
             padding: 3px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .music-control {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #ffcc00;
-            border-radius: 10px;
-            padding: 8px 12px;
-            cursor: pointer;
-            z-index: 1000;
-            font-size: 1.2em;
-            transition: all 0.2s;
-        }
-
-        .music-control:hover {
-            background: rgba(0, 0, 0, 0.9);
-            transform: scale(1.1);
-        }
     </style>
 </head>
 <body>
@@ -463,8 +443,8 @@
                 timeRemaining--;
                 updateTimerDisplay();
                 
-                // Activar modo noche a los 45 segundos (cuando quedan 15 segundos)
-                if (timeRemaining === 15 && !nightModeActive) {
+                // Activar modo noche a los 40 segundos (cuando quedan 20 segundos)
+                if (timeRemaining === 20 && !nightModeActive) {
                     activateNightMode();
                 }
                 
@@ -865,32 +845,12 @@
             const healCard = playerHand[selectedHealingCard];
             const targetCard = playerField[slotIndex];
             
-            // No se puede curar si no hay luchador o está derrotado
-            if (!targetCard) {
-                addLog('⚠️ No puedes curar un espacio vacío. El luchador ya fue derrotado.');
-                selectedHealingCard = null;
-                renderHand();
-                clearHealableSlots();
-                return;
-            }
-            
-            if (targetCard.vida <= 0) {
-                addLog('⚠️ No puedes curar a un luchador derrotado');
-                selectedHealingCard = null;
-                renderHand();
-                clearHealableSlots();
-                return;
-            }
+            if (!targetCard) return;
             
             const healAmount = nightModeActive ? Math.floor(healCard.curacion / 2) : healCard.curacion;
-            const vidaAnterior = targetCard.vida;
             targetCard.vida += healAmount;
             
-            if (nightModeActive) {
-                addLog(`🌙 Modo Noche: Curación reducida al 50%`);
-            }
-            addLog(`✚ ${healCard.nombre} usada en ${targetCard.nombre}`);
-            addLog(`❤ ${targetCard.nombre}: ${vidaAnterior} → ${targetCard.vida} (+${healAmount} vida)`);
+            addLog(`✓ ${targetCard.nombre} curado +${healAmount} vida (Total: ${targetCard.vida})`);
             
             playerHand.splice(selectedHealingCard, 1);
             selectedHealingCard = null;
