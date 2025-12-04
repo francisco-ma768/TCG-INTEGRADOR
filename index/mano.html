@@ -44,6 +44,19 @@
         font-size: 1.2em;
         margin-bottom: 30px;
         color: #a89f8d;
+        transition: all 0.3s ease;
+    }
+
+    @keyframes flash {
+        0%, 100% {
+            transform: scale(1);
+            color: #a89f8d;
+        }
+        50% {
+            transform: scale(1.1);
+            color: #ffcc00;
+            text-shadow: 0 0 20px #ffcc00;
+        }
     }
 
     .loading {
@@ -102,6 +115,18 @@
         flex-direction: column;
         justify-content: space-between;
         color: white;
+        animation: cardFadeIn 0.4s ease-out;
+    }
+
+    @keyframes cardFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .card-slot:hover {
@@ -163,18 +188,20 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 10px;
         width: 100%;
         padding-top: 30px;
     }
 
     .btn {
-        padding: 14px 28px;
-        font-size: 1.1em;
+        padding: 14px 20px;
+        font-size: 1em;
         font-weight: bold;
         border-radius: 10px;
         border: 3px solid #ffcc00;
         cursor: pointer;
         transition: 0.2s;
+        flex: 1;
     }
 
     .btn:hover {
@@ -183,6 +210,7 @@
 
     .back-button { background: #666; color: white; }
     .change-deck-button { background: #e6b800; color: #111; }
+    .reroll-button { background: #ff8800; color: white; }
     .start-game-button { background: #4CAF50; color: white; }
 </style>
 </head>
@@ -205,7 +233,8 @@
 
     <div class="button-footer">
         <button class="btn back-button" onclick="window.location.href='index.html';">Volver</button>
-        <button class="btn change-deck-button" onclick="toggleDeck()">🔄 Cambiar Mazo</button>
+        <button class="btn reroll-button" onclick="rerollCards()">🎲 Cambiar Cartas</button>
+        <button class="btn change-deck-button" onclick="toggleDeck()">⚔️ Cambiar Mazo</button>
         <button class="btn start-game-button" id="play-btn" onclick="goToGame()" disabled>JUGAR ➡️</button>
     </div>
 </div>
@@ -219,6 +248,13 @@
         try {
             const response = await fetch('data/cartas.json');
             deckData = await response.json();
+            
+            // Cargar deck guardado si existe
+            const savedDeck = sessionStorage.getItem('selectedDeck');
+            if (savedDeck) {
+                currentDeck = savedDeck;
+            }
+            
             renderHand();
         } catch (error) {
             console.error('Error al cargar cartas:', error);
@@ -237,15 +273,33 @@
         displayCards();
     }
 
+    function rerollCards() {
+        renderHand();
+        // Efecto visual al cambiar cartas
+        const infoText = document.getElementById('info-text');
+        infoText.style.animation = 'flash 0.5s';
+        setTimeout(() => infoText.style.animation = '', 500);
+    }
+
     function toggleDeck() {
         currentDeck = currentDeck === 'orah' ? 'nora' : 'orah';
         renderHand();
+        
+        // Efecto visual destacado al cambiar de mazo
+        const infoText = document.getElementById('info-text');
+        infoText.style.animation = 'flash 0.5s';
+        setTimeout(() => infoText.style.animation = '', 500);
     }
 
     function displayCards() {
         const handArea = document.getElementById('hand-area');
         handArea.innerHTML = '';
-        selectedCards.forEach(card => handArea.appendChild(createCardElement(card)));
+        selectedCards.forEach((card, index) => {
+            const cardElement = createCardElement(card);
+            // Añadir delay a cada carta para efecto cascada
+            cardElement.style.animationDelay = `${index * 0.1}s`;
+            handArea.appendChild(cardElement);
+        });
         document.getElementById('play-btn').disabled = false;
     }
 

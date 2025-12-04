@@ -88,7 +88,8 @@
             position: relative;
             z-index: 1;
             overflow: hidden;
-        }
+        } 
+        
 
         /* Header con información */
         .game-header {
@@ -977,19 +978,22 @@
             
             draggedCardIndex = null;
         }
+        
+  function passTurnManually() {
+    // Si no jugué carta este turno y NO estoy obligado a pasar, no permitir
+    if (!cardPlayedThisTurn && !shouldForcePass()) {
+        addLog('⚠️ Debes jugar una carta antes de pasar turno');
+        return;
+    }
 
-        function passTurnManually() {
-            // Solo permitir pasar si ya se jugó al menos una carta alguna vez O si ya no es el primer turno
-            if (!firstCardPlayedEver && !cardPlayedThisTurn) return;
-            
-            addLog('✓ Pasaste turno manualmente');
-            document.getElementById('ready-btn').disabled = true;
-            clearInterval(turnTimerInterval);
-            
-            setTimeout(() => {
-                endPlayerTurn();
-            }, 500);
-        }
+    addLog('✓ Pasaste turno');
+    document.getElementById('ready-btn').disabled = true;
+
+    clearInterval(turnTimerInterval);
+    setTimeout(() => {
+        endPlayerTurn();
+    }, 500);
+}
 
         function renderField() {
             // Renderizar campo del jugador
@@ -1098,6 +1102,19 @@
                 resolveCombat(playerCard, opponentCard, 0);
             }
         }
+
+        function shouldForcePass() {
+    const mySlot = playerField[0];
+    const enemySlot = opponentField[0];
+
+    // Si yo ya tengo un luchador en campo y el rival NO, no puedo jugar otra carta
+    if (mySlot && !enemySlot) {
+        return true;
+    }
+    return false;
+}
+
+        
 
         function resolveCombat(card1, card2, slotIndex) {
             addLog(`⚔️ Combate en slot ${slotIndex + 1}:`);
