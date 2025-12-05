@@ -324,14 +324,20 @@
         return div;
     }
 
-    function goToGame() {
-        sessionStorage.setItem('selectedCards', JSON.stringify(selectedCards));
-        sessionStorage.setItem('selectedDeck', currentDeck);
-        window.location.href = 'tablero.html';
-    }
+function goToGame() {
+    sessionStorage.setItem('selectedCards', JSON.stringify(selectedCards));
+    sessionStorage.setItem('selectedDeck', currentDeck);
+    window.location.href = 'animatic.html';  // 👉 ahora va al animatic
+}
+
 
     window.onload = loadCards;
 </script>
+<script src="musica.js"></script>
+<script>
+    reanudarMusica();  // la música suena normalmente
+</script>
+
 
 </body>
 </html>

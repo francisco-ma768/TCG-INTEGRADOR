@@ -14,26 +14,24 @@
         body {
             font-family: Arial, sans-serif;
             background: #654321;
+            width: 100vw;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
-            position: relative;
-            margin: 0;
-            padding: 0;
             overflow: hidden;
         }
 
         /* Contador de 15 segundos en los controles */
         .turn-timer-display {
-            font-size: 1.8em;
+            font-size: clamp(1.5em, 3vw, 2.2em);
             font-weight: bold;
-            padding: 8px 20px;
+            padding: clamp(6px, 1vh, 12px) clamp(15px, 2vw, 25px);
             background: rgba(0, 0, 0, 0.9);
             border: 3px solid #ffcc00;
             border-radius: 10px;
-            min-width: 70px;
+            min-width: clamp(60px, 8vw, 90px);
             text-align: center;
             box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
         }
@@ -51,8 +49,8 @@
 
         /* Botón LISTO */
         .ready-button {
-            padding: 10px 25px;
-            font-size: 1.1em;
+            padding: clamp(8px, 1.5vh, 14px) clamp(20px, 3vw, 35px);
+            font-size: clamp(1em, 2vw, 1.4em);
             background: #4CAF50;
             color: white;
             border: 3px solid #333;
@@ -76,88 +74,144 @@
         }
 
         .game-container {
-            width: 100%;
+            width: 100vw;
             height: 100vh;
-            max-height: 100vh;
             background: none;
             border: none;
-            display: flex;
-            flex-direction: column;
-            padding: 5px;
-            gap: 2px;
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr) auto minmax(0, 1fr) auto;
+            padding: clamp(5px, 1vh, 15px);
+            gap: clamp(5px, 1vh, 12px);
             position: relative;
             z-index: 1;
-            overflow: hidden;
         } 
-        
 
         /* Header con información */
         .game-header {
             display: flex;
             justify-content: space-between;
-            padding: 5px 10px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 5px;
+            align-items: center;
+            padding: clamp(8px, 1.5vh, 15px) clamp(15px, 2vw, 30px);
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            border: 2px solid #ffcc00;
+            min-height: clamp(60px, 8vh, 100px);
         }
 
         .player-info {
-            font-size: 1em;
+            font-size: clamp(1em, 2vw, 1.5em);
+            font-weight: bold;
+        }
+
+        .center-info {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(3px, 0.5vh, 8px);
+        }
+
+        #timer {
+            font-size: clamp(1.5em, 3vw, 2.5em);
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        #turn-timer {
+            font-size: clamp(1.8em, 3.5vw, 2.8em);
+            color: #ff4444;
+            font-weight: bold;
+        }
+
+        #turn-indicator {
+            font-size: clamp(1em, 2vw, 1.4em);
+            color: #44ff44;
+            font-weight: bold;
+        }
+
+        #night-mode-indicator {
+            font-size: clamp(0.9em, 1.8vw, 1.2em);
+            color: #4444ff;
+            font-weight: bold;
+        }
+
+        /* Mano del BOT (arriba) */
+        #bot-hand {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(8px, 1.5vw, 20px);
+            padding: clamp(8px, 1.5vh, 15px);
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            border: 2px solid #ff0000;
+            opacity: 0.9;
+            overflow: visible;
         }
 
         /* Zona de combate */
         .combat-zone {
-            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 15px;
-            padding: 5px 0;
+            align-items: center;
+            gap: clamp(20px, 4vh, 50px);
+            padding: clamp(10px, 2vh, 25px) 0;
         }
 
         .battle-row {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            padding: 10px;
+            align-items: center;
+            gap: clamp(20px, 3vw, 40px);
+            width: 100%;
+            height: 100%;
+            max-height: 35vh;
         }
 
         .opponent-row {
-            border-bottom: 2px dashed rgba(255, 255, 255, 0.3);
+            border-bottom: 3px dashed rgba(255, 255, 255, 0.4);
+            padding-bottom: clamp(10px, 2vh, 20px);
         }
 
-        /* Slots de combate */
+        .player-row {
+            padding-top: clamp(10px, 2vh, 20px);
+        }
+
+        /* Slots de combate - MÁS GRANDES */
         .combat-slot {
-            width: 110px;
-            height: 150px;
-            border: 3px dashed rgba(255, 255, 255, 0.4);
-            border-radius: 10px;
+            width: clamp(140px, 18vw, 220px);
+            height: clamp(180px, 25vh, 280px);
+            border: 4px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: visible;
+            transition: all 0.3s;
         }
 
         .combat-slot.occupied {
             border-style: solid;
             border-color: #ffcc00;
+            background: rgba(255, 204, 0, 0.1);
         }
 
         .combat-slot.healable {
             border-color: #00ff00;
-            box-shadow: 0 0 15px #00ff00;
+            box-shadow: 0 0 20px #00ff00;
             cursor: pointer;
         }
 
-        /* Cartas */
+        /* Cartas - MÁS GRANDES Y RESPONSIVAS */
         .card {
-            width: 100px;
-            height: 140px;
+            width: clamp(120px, 16vw, 200px);
+            height: clamp(170px, 23vh, 260px);
             background: linear-gradient(135deg, #5d0f19 0%, #3a0a10 100%);
             border: 3px solid #f5e6b9;
-            border-radius: 8px;
-            padding: 6px;
+            border-radius: 12px;
+            padding: clamp(6px, 1vh, 12px);
             cursor: grab;
             transition: all 0.3s ease;
             position: relative;
@@ -165,167 +219,196 @@
             flex-direction: column;
             overflow: hidden;
             z-index: 1;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         .card:hover {
-            width: 150px;
-            height: 220px;
-            transform: scale(1.1) translateY(-30px);
+            transform: scale(1.15) translateY(-20px);
             z-index: 100;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 15px 40px rgba(255, 204, 0, 0.6);
         }
 
         .card .card-description {
             display: none;
-            font-size: 0.65em;
+            font-size: clamp(0.7em, 1.2vw, 0.9em);
             text-align: center;
-            margin: 5px 0;
+            margin: clamp(5px, 1vh, 10px) 0;
             color: #ddd;
             flex-grow: 1;
+            line-height: 1.3;
         }
 
         .card:hover .card-description {
             display: block;
         }
 
-        .card:hover {
-            box-shadow: 0 0 20px #ffcc00;
-        }
-
         .card-header {
-            font-size: 0.7em;
+            font-size: clamp(0.8em, 1.5vw, 1.1em);
             font-weight: bold;
             text-align: center;
-            margin-bottom: 2px;
+            margin-bottom: clamp(3px, 0.5vh, 6px);
             color: #ffcc00;
             flex-shrink: 0;
         }
 
         .card-image {
             width: 100%;
-            height: 45px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
+            height: clamp(50px, 8vh, 80px);
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 3px;
-            font-size: 0.6em;
+            margin-bottom: clamp(4px, 0.8vh, 8px);
+            font-size: clamp(0.7em, 1.3vw, 1em);
             flex-shrink: 0;
+            border: 1px solid rgba(255, 204, 0, 0.3);
         }
 
         .card-stats {
             display: flex;
             justify-content: space-around;
-            font-size: 0.8em;
+            font-size: clamp(0.85em, 1.5vw, 1.1em);
             margin-top: auto;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 4px;
-            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: clamp(5px, 1vh, 10px);
+            border-radius: 8px;
             flex-shrink: 0;
+            gap: clamp(3px, 0.5vw, 8px);
         }
 
         .stat {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 3px 5px;
-            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: clamp(4px, 0.8vh, 8px) clamp(6px, 1vw, 12px);
+            border-radius: 6px;
             font-weight: bold;
-            text-shadow: 1px 1px 2px #000;
+            text-shadow: 1px 1px 3px #000;
+            flex: 1;
+            text-align: center;
         }
 
-        .stat-atk { color: #ff6666; border: 1px solid #ff6666; }
-        .stat-vida { color: #66ff66; border: 1px solid #66ff66; }
-        .stat-vel { color: #6699ff; border: 1px solid #6699ff; }
-        .stat-cur { color: #ffcc00; border: 1px solid #ffcc00; }
+        .stat-atk { color: #ff6666; border: 2px solid #ff6666; }
+        .stat-vida { color: #66ff66; border: 2px solid #66ff66; }
+        .stat-vel { color: #6699ff; border: 2px solid #6699ff; }
+        .stat-cur { color: #ffcc00; border: 2px solid #ffcc00; }
 
-        /* Mano del jugador */
+        /* Mano del jugador - MÁS GRANDE */
         .hand-zone {
-            height: 160px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
-            padding: 10px;
+            gap: clamp(10px, 2vw, 25px);
+            padding: clamp(10px, 2vh, 20px);
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
             border: 2px solid #ffcc00;
             overflow: visible;
+            min-height: clamp(180px, 28vh, 300px);
         }
 
         /* Botones */
         .controls {
             position: fixed;
-            bottom: 10px;
-            left: 10px;
+            bottom: clamp(10px, 2vh, 25px);
+            left: clamp(10px, 2vw, 25px);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: clamp(8px, 1.5vh, 15px);
             z-index: 1000;
         }
 
         button {
-            padding: 8px 15px;
-            font-size: 0.9em;
+            padding: clamp(8px, 1.5vh, 14px) clamp(15px, 2vw, 25px);
+            font-size: clamp(0.9em, 1.8vw, 1.2em);
             background: #e6675e;
             color: white;
-            border: 2px solid #ffcc00;
-            border-radius: 5px;
+            border: 3px solid #ffcc00;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
+            transition: all 0.2s;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
         }
 
         button:hover {
             background: #c44f45;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.6);
         }
 
         button:disabled {
             background: #666;
             cursor: not-allowed;
             opacity: 0.5;
+            transform: none;
         }
 
         /* Carta del oponente */
         .card.healing-selected {
             border-color: #00ff00;
-            box-shadow: 0 0 20px #00ff00;
+            box-shadow: 0 0 25px #00ff00;
         }
 
         .card.bot-card {
-            width: 85px;
-            height: 110px;
-            font-size: 0.7em;
+            width: clamp(100px, 14vw, 170px);
+            height: clamp(140px, 19vh, 220px);
             background: linear-gradient(135deg, #1a0a0a 0%, #0a0505 100%);
             border-color: #ff0000;
         }
 
         .card.bot-card .card-header {
-            font-size: 0.65em;
+            font-size: clamp(0.7em, 1.3vw, 0.95em);
         }
 
         .card.bot-card .card-stats {
-            font-size: 0.6em;
+            font-size: clamp(0.7em, 1.3vw, 0.95em);
+        }
+
+        .card.bot-card .card-image {
+            height: clamp(40px, 6vh, 65px);
         }
 
         /* Mensajes de log */
         .game-log {
             position: fixed;
-            top: 10px;
-            right: 10px;
-            width: 250px;
-            height: 150px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #ffcc00;
-            border-radius: 5px;
-            padding: 10px;
+            top: clamp(10px, 2vh, 20px);
+            right: clamp(10px, 2vw, 20px);
+            width: clamp(250px, 22vw, 350px);
+            height: clamp(150px, 22vh, 220px);
+            background: rgba(0, 0, 0, 0.85);
+            border: 3px solid #ffcc00;
+            border-radius: 10px;
+            padding: clamp(10px, 1.5vh, 15px);
             overflow-y: auto;
-            font-size: 0.75em;
+            font-size: clamp(0.75em, 1.4vw, 0.95em);
             z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
         }
 
         .log-entry {
-            margin-bottom: 5px;
-            padding: 3px;
+            margin-bottom: clamp(5px, 1vh, 8px);
+            padding: clamp(3px, 0.5vh, 6px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            line-height: 1.4;
+        }
+
+        /* Scrollbar personalizada */
+        .game-log::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .game-log::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+        }
+
+        .game-log::-webkit-scrollbar-thumb {
+            background: #ffcc00;
+            border-radius: 4px;
+        }
+
+        .game-log::-webkit-scrollbar-thumb:hover {
+            background: #ffdd00;
         }
     </style>
 </head>
@@ -336,11 +419,11 @@
             <div class="player-info">
                 <strong>Tribu Nora (Rival)</strong>
             </div>
-            <div class="player-info" style="text-align: center;">
-                <div style="font-size: 1.5em; color: #ffcc00;" id="timer">1:00</div>
-                <div style="font-size: 1.8em; color: #ff4444; font-weight: bold;" id="turn-timer">15</div>
-                <div id="turn-indicator" style="font-size: 1em; color: #44ff44;">Tu Turno</div>
-                <div id="night-mode-indicator" style="display: none; color: #4444ff;">🌙 MODO NOCHE 🌙</div>
+            <div class="player-info center-info">
+                <div id="timer">1:00</div>
+                <div id="turn-timer">15</div>
+                <div id="turn-indicator">Tu Turno</div>
+                <div id="night-mode-indicator" style="display: none;">🌙 MODO NOCHE 🌙</div>
             </div>
             <div class="player-info">
                 <strong>Tribu Orah (Tú)</strong>
@@ -348,7 +431,7 @@
         </div>
 
         <!-- Mano del BOT (arriba) -->
-        <div class="hand-zone" id="bot-hand" style="height: 90px; gap: 8px; opacity: 0.8;">
+        <div id="bot-hand">
             <!-- Las cartas del bot se mostrarán aquí -->
         </div>
 
@@ -389,32 +472,27 @@
         // ========================================
         let deck = [];
         let playerHand = [];
-        let playerField = [null]; // SOLO 1 SLOT
-        let opponentField = [null]; // SOLO 1 SLOT
+        let playerField = [null];
+        let opponentField = [null];
         let currentTurn = 1;
         let gameActive = true;
         
-        // Variables del timer y modo noche
         let timeRemaining = 60;
         let timerInterval = null;
         let nightModeActive = false;
         
-        // Sistema de turnos de 15 segundos
         let turnTimeRemaining = 15;
         let turnTimerInterval = null;
         let isPlayerTurnActive = false;
         let cardPlayedThisTurn = false;
-        let firstCardPlayedEver = false; // NUEVO: controla si ya se jugó la primera carta
+        let firstCardPlayedEver = false;
         
-        // BOT
         let botDeck = [];
         let botHand = [];
         let botDifficulty = 'medium';
         
-        // Sistema de curaciones
         let selectedHealingCard = null;
         
-        // Contadores de luchadores
         let playerFightersAlive = 3;
         let botFightersAlive = 3;
 
@@ -444,12 +522,10 @@
                 timeRemaining--;
                 updateTimerDisplay();
                 
-                // Activar modo noche a los 40 segundos (cuando quedan 20 segundos)
-                if (timeRemaining === 45&& !nightModeActive) {
+                if (timeRemaining === 45 && !nightModeActive) {
                     activateNightMode();
                 }
                 
-                // Fin del tiempo
                 if (timeRemaining <= 0) {
                     endGame('tiempo');
                 }
@@ -462,7 +538,6 @@
             const timerDisplay = document.getElementById('timer');
             timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
             
-            // Cambiar color cuando queda poco tiempo
             if (timeRemaining <= 15) {
                 timerDisplay.style.color = '#ff4444';
             } else if (timeRemaining <= 30) {
@@ -474,7 +549,6 @@
             turnTimeRemaining = 15;
             cardPlayedThisTurn = false;
             
-            // Solo deshabilitar el botón si es el primer turno y no se ha jugado carta
             if (!firstCardPlayedEver) {
                 document.getElementById('ready-btn').disabled = true;
             } else {
@@ -496,12 +570,10 @@
                 turnTimeRemaining--;
                 updateTurnTimerDisplay();
                 
-                // Si se acaba el tiempo del turno
                 if (turnTimeRemaining <= 0) {
                     clearInterval(turnTimerInterval);
                     
                     if (isPlayerTurnActive && !cardPlayedThisTurn && !firstCardPlayedEver) {
-                        // Sistema elige carta automáticamente SOLO en el primer turno
                         autoPlayCard();
                     }
                     
@@ -518,7 +590,6 @@
             
             timerDisplay.textContent = turnTimeRemaining;
             
-            // Cambiar estilo según tiempo
             if (turnTimeRemaining <= 5) {
                 timerDisplay.style.color = '#ff0000';
                 timerDisplay.classList.add('warning');
@@ -534,7 +605,6 @@
         }
 
         function autoPlayCard() {
-            // Sistema elige automáticamente una carta aleatoria
             const availableCards = playerHand.filter(c => c.tipo === 'Luchador');
             const emptySlot = playerField.findIndex(slot => slot === null);
             
@@ -567,11 +637,8 @@
         }
 
         function endPlayerTurn() {
-            // Resolver combate al final del turno
             processCombat();
             checkVictoryConditions();
-            
-            // Cambiar a turno del rival
             switchTurn();
         }
 
@@ -585,12 +652,10 @@
             } else {
                 addLog('═══ Turno del rival ═══');
                 
-                // Bot juega inmediatamente
                 setTimeout(() => {
                     if (!isPlayerTurnActive && gameActive) {
                         opponentTurn();
                         
-                        // Después, resuelve combate y vuelve a tu turno
                         setTimeout(() => {
                             processCombat();
                             checkVictoryConditions();
@@ -605,18 +670,15 @@
             nightModeActive = true;
             addLog('🌙 ¡MODO NOCHE ACTIVADO! Todos los luchadores pierden 1 de vida');
             
-            // Mostrar indicador visual
             document.getElementById('night-mode-indicator').style.display = 'block';
             document.body.style.background = 'linear-gradient(to bottom, #1a0f2e 0%, #0a0514 100%)';
             
-            // Aplicar daño a todos los luchadores en el campo
             applyNightModeDamage();
         }
 
         function applyNightModeDamage() {
             addLog('🌙 === EFECTO DEL MODO NOCHE ===');
             
-            // Todos los luchadores pierden 1 punto de vida
             playerField.forEach((card, index) => {
                 if (card && card.tipo === 'Luchador') {
                     card.vida -= 1;
@@ -652,17 +714,14 @@
         // ========================================
         async function loadCards() {
             try {
-                // Cargar dificultad del bot desde configuraciones
                 botDifficulty = localStorage.getItem('botDifficulty') || 'medium';
                 
-                // Intentar cargar cartas desde sessionStorage (viene de mano.html)
                 const savedCards = sessionStorage.getItem('selectedCards');
                 
                 if (savedCards) {
                     deck = JSON.parse(savedCards);
                     addLog('Cartas cargadas desde tu selección');
                 } else {
-                    // Si no hay cartas guardadas, cargar aleatorias
                     const response = await fetch('data/cartas.json');
                     const data = await response.json();
                     
@@ -676,7 +735,6 @@
                     addLog('Cartas aleatorias cargadas');
                 }
                 
-                // Cargar mazo del BOT (Tribu Nora)
                 await loadBotDeck();
                 
                 console.log('Deck del jugador:', deck);
@@ -698,13 +756,10 @@
                 const noraCards = data.mazo_tribu_nora;
                 const shuffled = noraCards.sort(() => 0.5 - Math.random());
                 
-                // BOT tiene 3 luchadores + 2 curaciones (igual que el jugador)
                 const luchadores = shuffled.filter(c => c.tipo === 'Luchador').slice(0, 3);
                 const curaciones = shuffled.filter(c => c.tipo === 'Curación').slice(0, 2);
                 
                 botDeck = [...luchadores, ...curaciones];
-                
-                // Dar mano inicial al bot
                 botHand = [...botDeck];
                 
                 addLog(`Bot cargado: 3 luchadores + 2 curaciones`);
@@ -747,7 +802,7 @@
             
             cardDiv.innerHTML = `
                 <div class="card-header">${card.nombre}</div>
-                <div class="card-image" style="height: 50px; font-size: 0.65em;">${card.tipo}</div>
+                <div class="card-image">${card.tipo}</div>
                 ${statsHTML}
             `;
             
@@ -786,7 +841,6 @@
             playerHand.forEach((card, index) => {
                 const cardElement = createCardElement(card, index);
                 
-                // Si es curación, agregar evento de clic
                 if (card.tipo === 'Curación') {
                     cardElement.onclick = () => selectHealingCard(card, index);
                     cardElement.style.cursor = 'pointer';
@@ -798,13 +852,11 @@
 
         function selectHealingCard(card, handIndex) {
             if (selectedHealingCard === handIndex) {
-                // Deseleccionar
                 selectedHealingCard = null;
                 renderHand();
                 clearHealableSlots();
                 addLog('Curación cancelada');
             } else {
-                // Seleccionar esta carta de curación
                 selectedHealingCard = handIndex;
                 renderHand();
                 highlightHealableSlots();
@@ -863,7 +915,6 @@
             cardPlayedThisTurn = true;
             firstCardPlayedEver = true;
             
-            // Habilitar botón LISTO
             document.getElementById('ready-btn').disabled = false;
             addLog('Presiona LISTO para pasar turno o espera 15 seg');
         }
@@ -872,7 +923,6 @@
             const cardDiv = document.createElement('div');
             cardDiv.className = 'card';
             
-            // Resaltar si es la carta de curación seleccionada
             if (handIndex === selectedHealingCard) {
                 cardDiv.classList.add('healing-selected');
             }
@@ -921,7 +971,6 @@
             e.dataTransfer.effectAllowed = 'move';
         }
 
-        // Hacer que los slots acepten drop
         document.addEventListener('DOMContentLoaded', () => {
             const playerSlots = document.querySelectorAll('#player-field .combat-slot');
             playerSlots.forEach(slot => {
@@ -969,7 +1018,6 @@
                 cardPlayedThisTurn = true;
                 firstCardPlayedEver = true;
                 
-                // Habilitar botón LISTO
                 document.getElementById('ready-btn').disabled = false;
                 addLog('Presiona LISTO para pasar turno o espera 15 seg');
             } else {
@@ -979,24 +1027,22 @@
             draggedCardIndex = null;
         }
         
-  function passTurnManually() {
-    // Si no jugué carta este turno y NO estoy obligado a pasar, no permitir
-    if (!cardPlayedThisTurn && !shouldForcePass()) {
-        addLog('⚠️ Debes jugar una carta antes de pasar turno');
-        return;
-    }
+        function passTurnManually() {
+            if (!cardPlayedThisTurn && !shouldForcePass()) {
+                addLog('⚠️ Debes jugar una carta antes de pasar turno');
+                return;
+            }
 
-    addLog('✓ Pasaste turno');
-    document.getElementById('ready-btn').disabled = true;
+            addLog('✓ Pasaste turno');
+            document.getElementById('ready-btn').disabled = true;
 
-    clearInterval(turnTimerInterval);
-    setTimeout(() => {
-        endPlayerTurn();
-    }, 500);
-}
+            clearInterval(turnTimerInterval);
+            setTimeout(() => {
+                endPlayerTurn();
+            }, 500);
+        }
 
         function renderField() {
-            // Renderizar campo del jugador
             const playerSlots = document.querySelectorAll('#player-field .combat-slot');
             playerSlots.forEach((slot, index) => {
                 slot.innerHTML = '';
@@ -1010,7 +1056,6 @@
                 }
             });
             
-            // Renderizar campo del oponente
             const opponentSlots = document.querySelectorAll('#opponent-field .combat-slot');
             opponentSlots.forEach((slot, index) => {
                 slot.innerHTML = '';
@@ -1036,7 +1081,6 @@
             
             let message = '';
             if (reason === 'tiempo') {
-                // Victoria por tiempo - según el manual
                 const playerAlive = playerField.filter(c => c !== null).length;
                 const opponentAlive = opponentField.filter(c => c !== null).length;
                 
@@ -1045,7 +1089,6 @@
                 } else if (opponentAlive > playerAlive) {
                     message = `⏰ DERROTA POR TIEMPO. El rival tiene más luchadores (${opponentAlive} vs ${playerAlive})`;
                 } else {
-                    // Mismo número de luchadores - contar vida total
                     const playerTotalLife = playerField.reduce((sum, c) => sum + (c ? c.vida : 0), 0);
                     const opponentTotalLife = opponentField.reduce((sum, c) => sum + (c ? c.vida : 0), 0);
                     
@@ -1073,7 +1116,6 @@
         function checkVictoryConditions() {
             if (!gameActive) return;
             
-            // Contar luchadores vivos (en campo + en mano)
             const playerFightersInHand = playerHand.filter(c => c.tipo === 'Luchador').length;
             const playerFightersInField = playerField.filter(c => c !== null && c.tipo === 'Luchador').length;
             const totalPlayerFighters = playerFightersInHand + playerFightersInField;
@@ -1082,7 +1124,6 @@
             const botFightersInField = opponentField.filter(c => c !== null && c.tipo === 'Luchador').length;
             const totalBotFighters = botFightersInHand + botFightersInField;
             
-            // Si un jugador perdió todos sus 3 luchadores, pierde
             if (totalPlayerFighters === 0) {
                 endGame('sin_cartas');
             } else if (totalBotFighters === 0) {
@@ -1093,33 +1134,27 @@
         function processCombat() {
             addLog('=== FASE DE COMBATE ===');
             
-            // SOLO 1 SLOT
             const playerCard = playerField[0];
             const opponentCard = opponentField[0];
             
-            // Solo hay combate si ambos tienen carta
             if (playerCard && opponentCard) {
                 resolveCombat(playerCard, opponentCard, 0);
             }
         }
 
         function shouldForcePass() {
-    const mySlot = playerField[0];
-    const enemySlot = opponentField[0];
+            const mySlot = playerField[0];
+            const enemySlot = opponentField[0];
 
-    // Si yo ya tengo un luchador en campo y el rival NO, no puedo jugar otra carta
-    if (mySlot && !enemySlot) {
-        return true;
-    }
-    return false;
-}
-
-        
+            if (mySlot && !enemySlot) {
+                return true;
+            }
+            return false;
+        }
 
         function resolveCombat(card1, card2, slotIndex) {
             addLog(`⚔️ Combate en slot ${slotIndex + 1}:`);
             
-            // Determinar quién ataca primero por velocidad
             let first, second, firstIsPlayer;
             
             if (card1.velocidad > card2.velocidad) {
@@ -1133,7 +1168,6 @@
                 firstIsPlayer = false;
                 addLog(`${first.nombre} (VEL:${first.velocidad}) ataca primero`);
             } else {
-                // Mismo velocidad - aleatorio
                 if (Math.random() > 0.5) {
                     first = card1;
                     second = card2;
@@ -1146,11 +1180,9 @@
                 addLog(`Misma velocidad - Orden aleatorio`);
             }
             
-            // PRIMER ATAQUE
             second.vida -= first.ataque;
             addLog(`${first.nombre} ataca → ${second.nombre} pierde ${first.ataque} vida (Vida restante: ${second.vida})`);
             
-            // Si el segundo sobrevive, contraataca
             if (second.vida > 0) {
                 first.vida -= second.ataque;
                 addLog(`${second.nombre} contraataca → ${first.nombre} pierde ${second.ataque} vida (Vida restante: ${first.vida})`);
@@ -1158,12 +1190,10 @@
                 addLog(`💀 ${second.nombre} ha sido derrotado`);
             }
             
-            // Verificar si el primero también murió
             if (first.vida <= 0) {
                 addLog(`💀 ${first.nombre} ha sido derrotado`);
             }
             
-            // Eliminar cartas muertas
             if (card1.vida <= 0) {
                 playerField[slotIndex] = null;
             }
@@ -1182,10 +1212,8 @@
                 return;
             }
             
-            // BOT SOLO PUEDE JUGAR 1 CARTA POR TURNO
             let botPlayedCard = false;
             
-            // Primero, intentar usar curación si tiene luchadores heridos
             const healingCards = botHand.filter(c => c.tipo === 'Curación');
             const injuredSlots = opponentField
                 .map((card, index) => ({ card, index }))
@@ -1214,7 +1242,6 @@
                 }
             }
             
-            // Si no usó curación, jugar luchador (SOLO SI AÚN NO JUGÓ CARTA)
             if (!botPlayedCard) {
                 const emptySlot = opponentField.findIndex(slot => slot === null);
                 
@@ -1258,11 +1285,9 @@
             
             switch(botDifficulty) {
                 case 'easy':
-                    // Fácil: Juega carta aleatoria
                     return availableCards[Math.floor(Math.random() * availableCards.length)];
                 
                 case 'medium':
-                    // Medio: Intenta igualar el ataque del jugador
                     if (playerCardInSlot) {
                         const similarCards = availableCards.filter(c => 
                             Math.abs(c.ataque - playerCardInSlot.ataque) <= 2
@@ -1274,9 +1299,7 @@
                     return availableCards[Math.floor(Math.random() * availableCards.length)];
                 
                 case 'hard':
-                    // Difícil: Juega la mejor carta estratégicamente
                     if (playerCardInSlot) {
-                        // Busca carta que pueda ganar por velocidad
                         const fasterCards = availableCards.filter(c => 
                             c.velocidad > playerCardInSlot.velocidad && 
                             c.ataque >= playerCardInSlot.vida
@@ -1287,14 +1310,12 @@
                             );
                         }
                         
-                        // Si no, busca la carta más fuerte disponible
                         return availableCards.reduce((best, card) => {
                             const bestScore = best.ataque + best.vida + best.velocidad;
                             const cardScore = card.ataque + card.vida + card.velocidad;
                             return cardScore > bestScore ? card : best;
                         });
                     }
-                    // Si no hay rival, juega la más fuerte
                     return availableCards.reduce((best, card) => 
                         (card.ataque + card.vida) > (best.ataque + best.vida) ? card : best
                     );
@@ -1314,7 +1335,6 @@
             addLog('Sistema de turnos: 15 segundos por jugador');
             addLog('Cada jugador juega 1 carta por turno');
             
-            // Después de cargar, iniciar con el turno del jugador
             setTimeout(() => {
                 isPlayerTurnActive = true;
                 updateTurnIndicator();

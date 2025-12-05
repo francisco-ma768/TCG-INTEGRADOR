@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animatic</title>
+    <style>
+        body {
+            margin: 0;
+            background: black;
+        }
+        video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+    <video id="animatic" autoplay>
+        <source src="assets/Animatic.mp4" type="video/mp4">
+    </video>
+
+    <script>
+        const video = document.getElementById("animatic");
+
+        video.addEventListener("ended", () => {
+            window.location.href = "tablero.html"; 
+        });
+    </script>
+
+</body>
+</html>
