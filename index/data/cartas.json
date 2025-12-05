@@ -148,7 +148,7 @@
       "vida": 4,
       "velocidad": 3,
       "descripcion": "Lo que tiene de anciano, lo tiene de años de experiencia. Más experimentado pero lento",
-      "imagen": "arquero_sabio.png"
+      "imagen": "assets/cartass/arquero_sabio.svg"
     },
     {
       "id": "orah_016",
