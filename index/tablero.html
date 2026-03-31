@@ -329,6 +329,11 @@
     </style>
 </head>
 <body>
+    <!-- Música de fondo del juego -->
+    <audio id="background-music" loop>
+        <source src="audio/tribal-war-chant.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="game-container">
         <!-- Header -->
         <div class="game-header">
@@ -1290,9 +1295,55 @@
         // ========================================
         // INICIALIZACIÓN
         // ========================================
+
+        // **====================================================**
+        // ** GESTIÓN DE AUDIO **
+        // **====================================================**
+
+        let musicEnabled = true;
+        let musicVolume = 0.3;
+
+        function playBackgroundMusic() {
+            const music = document.getElementById('background-music');
+            if (music) {
+                music.volume = musicVolume;
+                music.play().catch(err => console.log('No se pudo reproducir la música:', err));
+            }
+        }
+
+        function stopBackgroundMusic() {
+            const music = document.getElementById('background-music');
+            if (music) {
+                music.pause();
+                music.currentTime = 0;
+            }
+        }
+
+        function toggleMusic() {
+            const music = document.getElementById('background-music');
+            if (music) {
+                if (musicEnabled) {
+                    music.pause();
+                    musicEnabled = false;
+                } else {
+                    music.play();
+                    musicEnabled = true;
+                }
+            }
+        }
+
+        function setMusicVolume(percentage) {
+            musicVolume = percentage / 100;
+            const music = document.getElementById('background-music');
+            if (music) {
+                music.volume = musicVolume;
+            }
+        }
+
         window.onload = () => {
             loadCards();
             startTimer();
+            playBackgroundMusic();
             addLog('=== Bienvenido a Las Luchas de las Tribus ===');
             addLog('Sistema de turnos: 15 segundos por jugador');
             addLog('Cada jugador juega 1 carta por turno');
